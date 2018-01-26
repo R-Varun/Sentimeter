@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentimeter</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript"            src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!--Let browser know website is optimized for mobile-->
+    <script type = "text/javascript">
+        function goToInputPage() {
+            document.location.href = 'input.html'
+        }
+
+        function goToHomePage() {
+            document.location.href = '/'
+        }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<header>
+        <div class="navbar-fixed" "color:aquamarine">
+            <nav class="white accent-1">
+
+                <div class="nav-wrapper">
+                        <input type="image" id="myimage" onclick = "goToHomePage()" src="https://cdn.dribbble.com/users/45642/screenshots/1231766/sentimeter_1x.png" style = "height:64px" />
+                </div>
+            </nav>
+        </div>
+    </header>
+<body class="grey lighten-3">
+    <div class="background" style="height:80%;">
+
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="col s12">
+                        <h1 class="white-text center">Sentimeter</h1>
+                        <div style = "text-align: center"><font color = "white" size="5"><i>The application that facilitates sentiment analysis of conversations involving multiple people</i></font></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div align = "center" style = "margin-top: 100px">
+<button type="button" id = "beginButton" onclick="goToInputPage()" style = " font-size: 40px; border-radius: 12px; padding: 14px 40px;background-color: white;
+color: black;
+border: 2px solid #4CAF50;">Begin</button>
+</div>
+
+    <footer>
+        <div class="footer-copyright">
+            <div class="container" align = "bottom">
+                <a class="grey-text text-lighten-4 right" href="#!">Link</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
