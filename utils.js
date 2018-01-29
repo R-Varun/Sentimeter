@@ -1,6 +1,7 @@
-function validateInput(data) {
+function validateInput(obj) {
     return new Promise(resolve => {
       valid = true;
+      data = obj.data;
       for (var i = 0; i < data.length; i ++) {
         cur = data[i]
         console.log(cur)
@@ -15,8 +16,6 @@ function validateInput(data) {
       }
       resolve(valid);
     })
-    
-
 }
 
 

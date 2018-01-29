@@ -1,7 +1,6 @@
 import nltk
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
 #defines default cfg
 cfg = {}
 cfg["NNP+NNP"] = "NNP"

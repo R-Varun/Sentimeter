@@ -1,9 +1,9 @@
 import sys
 import json
-import input
+import parse
 import contextsummary
 
-data = parseInput(sys.argv[1])
+data = parse.parseInput(sys.argv[1])
 #data = input.readBody()
 
 topicList = {}
@@ -12,7 +12,7 @@ topicList = {}
 counter = 5
 
 for sentence in data[0]:
-    taggedSentences = contextsummary.posTag(sentence[1])
+    taggedSentences = contextsummary.posTag(sentence["utterance"])
     topic = contextsummary.sentenctExtract(taggedSentences)
     """if counter <= 0:
         #print taggedSentences
