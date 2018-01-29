@@ -5,20 +5,22 @@ import contextsummary
 
 data = parseInput(sys.argv[1])
 #data = input.readBody()
-
+input = data[0]
+granularity = data[1]
+begin = int(granularity[0])
+end = int(granularity[1])
 topicList = {}
 
-#testing
-counter = 5
+if begin is -1 and end is -1:
+    begin = 0
+    end = len(input) - 1
+if begin < 0 or end >= len(input):
+    print "invalid granularity"
+    quit()
 
-for sentence in data[0]:
+for sentence in input[begin: end]:
     taggedSentences = contextsummary.posTag(sentence[1])
     topic = contextsummary.sentenctExtract(taggedSentences)
-    """if counter <= 0:
-        #print taggedSentences
-        print(sentence[1])
-        print(topic)
-        counter += 1"""
     for top in topic:
         if top in topicList:
             topicList[top] = topicList[top] + 1
