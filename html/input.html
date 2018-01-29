@@ -76,16 +76,30 @@ hr.style6 {
         <h5 class="grey-text">OR</h5>
         <hr class="style6">
         <br>
+        <div class="row">
 
-        <textarea class="materialize-textarea text-input" rows="12" cols="150" placeholder="Paste Text to Analyze Here" >Speaker1: I went to the park</textarea>
-        <div class="input-field col s1">
-            <input value="\n" id="speaker_delimit" type="text">
-            <label class="active" for="speaker_delimit">Speaker Delimiter</label>
+        
+          <textarea class="materialize-textarea text-input" rows="12" cols="150" placeholder="Paste Text to Analyze Here" >Speaker1: I went to the park</textarea>
+          <div class="input-field col s2">
+              <input value="\n" id="speaker_delimit" type="text">
+              <label class="active" for="speaker_delimit">Speaker Delimiter</label>
+            </div>
+          <div class="input-field col s2">
+              <input value=":" id="speech_delimit" type="text">
+              <label class="active" for="speech_delimit">Speech Delimit</label>
+            </div>
+          
+          <div class="input-field col s2">
+              <input value="-1" id="gran_start" type="text">
+              <label class="active" for="gran_start">Starting</label>
           </div>
-        <div class="input-field col s1">
-            <input value=":" id="speech_delimit" type="text">
-            <label class="active" for="speech_delimit">Speech Delimit</label>
+          <div class="input-field col s2">
+              <input value="-1" id="gran_end" type="text">
+              <label class="active" for="gran_start">Ending</label>
           </div>
+          
+        </div>
+
 
       
       </div>
@@ -188,10 +202,17 @@ function submit() {
   var sp_del = $("#speaker_delimit").val().replace("\\n","\n");
   var s_del = $("#speech_delimit").val()
   
+  var gran_start = parseInt($("#gran_start").val());
+  var gran_end = parseInt($("#gran_end").val());
+  var gran = [gran_start, gran_end];
+  if (gran_start < 0 || gran_end < 0) {
+    gran = [-1,-1];
+  }
+
   var retObj = {}
 
-  retObj["granularity"] = 1
-  retObj["corpus"] = 1
+  retObj["granularity"] = gran;
+  retObj["corpus"] = 1;
   split_speech = text.split(sp_del);
 
   retObj["data"] = []
