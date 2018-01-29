@@ -6,18 +6,19 @@ import contextsummary
 data = parse.parseInput(sys.argv[1])
 #data = input.readBody()
 input = data[0]
-granularity = data[1]
+granularity = data[2]
 begin = int(granularity[0])
 end = int(granularity[1])
+
+
 topicList = {}
 
 if begin is -1 and end is -1:
     begin = 0
-    end = len(input) - 1
-if begin < 0 or end >= len(input):
+    end = len(input)
+elif begin < 0 or end > len(input):
     print "invalid granularity"
     quit()
-
 
 for sentence in input[begin: end]:
     taggedSentences = contextsummary.posTag(sentence["utterance"])

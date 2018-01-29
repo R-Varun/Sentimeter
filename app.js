@@ -67,7 +67,7 @@ app.post('/api/analyze',async function (req, res) {
   var ars =  [JSON.stringify(data)]
   PythonShell.run('python/main.py' , {mode:"json", args:ars}, function (err, results) {
     if (err) {
-        console.log(err);
+        console.log("PYTHON FAILED");
         res.send({status : "ERROR", message : "PYTHON SCRIPT FAILED"})
         return        
     }
@@ -75,6 +75,8 @@ app.post('/api/analyze',async function (req, res) {
     var dataObj = {}
     dataObj["freq"] = results;
     req.session["session-data"] = dataObj
+
+    console.log(results);
     res.send(results);
     return;
   });
