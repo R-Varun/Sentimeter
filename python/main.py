@@ -18,9 +18,9 @@ if begin < 0 or end >= len(input):
     print "invalid granularity"
     quit()
 
-    
+
 for sentence in input[begin: end]:
-    taggedSentences = contextsummary.posTag(sentence[utterance])
+    taggedSentences = contextsummary.posTag(sentence["utterance"])
     topic = contextsummary.sentenctExtract(taggedSentences)
     for top in topic:
         if top in topicList:
