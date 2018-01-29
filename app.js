@@ -4,8 +4,7 @@ var app = express()
 var port = process.env.PORT || 3000;
 var path = require('path');
 var server = require('http').createServer(app);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+
 var config = require('./config.js');
 const session = require('express-session')
 var uniqid = require("uniqid");
@@ -18,6 +17,10 @@ var utils = require("./utils.js");
 
 
 const saltRounds = 10;
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Templating ----x`
 app.set('views', './views');
@@ -39,24 +42,40 @@ app.get("/input", function(req, res) {
   res.sendFile('html/input.html' , { root : __dirname});
 });
 
+app.post("/user/data", async function(req, res) {
+  if (typeof req.session["session-data"] === 'undefined') {
+    res.send({status : "ERROR", message : "NO DATA AVAILABLE"});
+  } else {
+    res.send({status : "SUCCESS", data: req.session["session-data"]});
+  }
+
+});
 
 app.post('/api/analyze',async function (req, res) {
-  var data = req.body.data;
+  var data = req.body;
   // validate input for analyze bloc
-
+  console.dir(data);
+  
+  
   var valid = await utils.validateInput(data)
   if (!valid) {
     res.send({status : "ERROR", message : "FORMAT INVALID"})
     return;
   }
 
-  var ars =  [JSON.stringify(data[0])]
-  PythonShell.run('test.py' , {mode:"json", args:ars}, function (err, results) {
+
+  var ars =  [JSON.stringify(data)]
+  PythonShell.run('python/main.py' , {mode:"json", args:ars}, function (err, results) {
     if (err) {
         console.log(err);
+        res.send({status : "ERROR", message : "PYTHON SCRIPT FAILED"})
+        return        
     }
-    fileID = results;
-    res.send(fileID);
+
+    var dataObj = {}
+    dataObj["freq"] = results;
+    req.session["session-data"] = dataObj
+    res.send(results);
     return;
   });
 
@@ -94,6 +113,12 @@ function error(err) {
 app.get("/results.html", function(req, res) {
   res.sendFile('html/results.html' , { root : __dirname});
 });
+
+
+app.get("/feature", function(req, res) {
+  res.sendFile('html/feature.html' , { root : __dirname});
+});
+
 
 app.get("/loader.html", function(req, res) {
   res.sendFile('html/loader.html' , { root : __dirname});

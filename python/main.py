@@ -1,9 +1,9 @@
 import sys
 import json
-import input
+import parse
 import contextsummary
 
-data = parseInput(sys.argv[1])
+data = parse.parseInput(sys.argv[1])
 #data = input.readBody()
 input = data[0]
 granularity = data[1]
@@ -18,8 +18,9 @@ if begin < 0 or end >= len(input):
     print "invalid granularity"
     quit()
 
+    
 for sentence in input[begin: end]:
-    taggedSentences = contextsummary.posTag(sentence[1])
+    taggedSentences = contextsummary.posTag(sentence[utterance])
     topic = contextsummary.sentenctExtract(taggedSentences)
     for top in topic:
         if top in topicList:

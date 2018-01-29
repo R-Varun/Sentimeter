@@ -4,8 +4,6 @@ import json
 #returns json object
 def parseInput(jsonFile):
     data = json.loads(jsonFile)
-
-
     input = data["data"]
     corpus = data["corpus"]
     granularity = data["granularity"]
