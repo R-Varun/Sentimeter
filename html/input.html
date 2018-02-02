@@ -79,7 +79,7 @@ hr.style6 {
         <div class="row">
 
         
-          <textarea class="materialize-textarea text-input" rows="12" cols="150" placeholder="Paste Text to Analyze Here" ></textarea>
+          <textarea class="materialize-textarea text-input" rows="12" cols="150" placeholder="Paste Text to Analyze Here" >Speaker1: I went to the park</textarea>
           <div class="input-field col s2">
               <input value="\n" id="speaker_delimit" type="text">
               <label class="active" for="speaker_delimit">Speaker Delimiter</label>
@@ -197,7 +197,6 @@ $(document).ready(function() {
      );
 
 function submit() {
-
   var text = $(".text-input").val();
   var sp_del = $("#speaker_delimit").val().replace("\\n","\n");
   var s_del = $("#speech_delimit").val()
