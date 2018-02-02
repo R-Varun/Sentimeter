@@ -10,6 +10,7 @@
     padding-left: 2rem;
 }
 .help-tip{
+    z-index:100000;
     position: absolute;
     top: 18px;
     right: 18px;
