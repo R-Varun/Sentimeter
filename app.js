@@ -54,17 +54,18 @@ app.post("/user/data", async function(req, res) {
 app.post('/api/analyze',async function (req, res) {
   var data = req.body;
   // validate input for analyze bloc
-  console.dir(data);
-  
-  
+  // console.dir(data);
+
+
   var valid = await utils.validateInput(data)
-  if (!valid) {
-    res.send({status : "ERROR", message : "FORMAT INVALID"})
-    return;
-  }
+  // if (!valid) {
+  //   res.send({status : "ERROR", message : "FORMAT INVALID"})
+  //   return;
+  // }
 
 
   var ars =  [JSON.stringify(data)]
+  console.log(ars)
   PythonShell.run('python/main.py' , {mode:"json", args:ars}, function (err, results) {
     if (err) {
         console.log("PYTHON FAILED");
