@@ -33,5 +33,6 @@
     "python-shell": "^0.4.0",
     "redis": "^2.8.0",
     "uniqid": "^4.1.1"
-  }
+  },
+  "devDependencies": {}
 }
