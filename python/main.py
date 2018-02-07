@@ -21,6 +21,8 @@ elif begin < 0 or end > len(input):
     quit()
 
 for sentence in input[begin: end]:
+    if "utterance" not in sentence:
+        continue
     taggedSentences = contextsummary.posTag(sentence["utterance"])
     topic = contextsummary.sentenctExtract(taggedSentences)
     for top in topic:
