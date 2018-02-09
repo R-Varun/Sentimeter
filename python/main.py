@@ -9,7 +9,7 @@ input = data[0]
 granularity = data[2]
 begin = int(granularity[0])
 end = int(granularity[1])
-stride = input[3]
+stride = data[3]
 
 
 
