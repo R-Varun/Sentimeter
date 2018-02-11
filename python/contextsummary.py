@@ -1,6 +1,5 @@
-import nltk
-# nltk.download('punkt')
-# nltk.download('averaged_perceptron_tagger')
+from nltk import word_tokenize
+from nltk import pos_tag
 #defines default cfg
 cfg = {}
 cfg["NNP+NNP"] = "NNP"
@@ -13,8 +12,8 @@ cfg["JJ+NNP"] = "NNP"
 
 
 def posTag(aSentence):
-    tokenized = nltk.word_tokenize(aSentence)
-    tagged = nltk.pos_tag(tokenized)
+    tokenized = word_tokenize(aSentence)
+    tagged = pos_tag(tokenized)
     """# print(tagged)
     vec = {}
     for i in tagged:
