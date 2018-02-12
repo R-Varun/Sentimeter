@@ -2,6 +2,13 @@ from nltk.sentiment import SentimentAnalyzer
 import pickle
 from nltk import pos_tag
 
+
+def createFeatureSet(tagged):
+    vec = {}
+    for i in tagged:
+        vec[i[0].lower()] = i[1]
+    return vec
+
 def sentimentAnalysis(tagged, corpus = None):
     classifier = None
     if corpus == None:
@@ -12,4 +19,4 @@ def sentimentAnalysis(tagged, corpus = None):
         #implement user corpus
         pass
 
-    return classifier.classify(tagged)
+    return classifier.classify(createFeatureSet(tagged))
