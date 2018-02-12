@@ -18,7 +18,11 @@ if begin is -1 and end is -1:
     begin = 0
     end = len(input)
 elif begin < 0 or end > len(input):
+<<<<<<< HEAD
+    print(json.dumps({"ERROR":"invalid granularity"}))
+=======
     print(json.dump("invalid granularity"))
+>>>>>>> bc5f8513c2b8ca35a97cdc55c1613098c62fb54a
     quit()
 
 
