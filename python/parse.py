@@ -7,8 +7,11 @@ def parseInput(jsonFile):
     input = data["data"]
     corpus = data["corpus"]
     granularity = data["granularity"]
+    stride = None
+    if "stride" in data:
+        stride = data[stride]
 
-    return input, corpus, granularity
+    return input, corpus, granularity, stride
 
 
 #testing purposes
