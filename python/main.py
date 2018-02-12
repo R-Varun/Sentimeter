@@ -2,7 +2,6 @@ import sys
 import json
 import parse
 import contextsummary
-
 data = parse.parseInput(sys.argv[1])
 #data = input.readBody()
 input = data[0]
@@ -17,7 +16,7 @@ if begin is -1 and end is -1:
     begin = 0
     end = len(input)
 elif begin < 0 or end > len(input):
-    print("invalid granularity")
+    print(json.dump("invalid granularity"))
     quit()
 
 
@@ -55,6 +54,7 @@ else:
             sortedTopics = sorted(topicList, key = lambda x : -1 * topicList[x])
             contextList.append(sortedTopics)
             topicList = {}
+
 sortedTopics = sorted(topicList, key = lambda x : -1 * topicList[x])
 contextList.append(sortedTopics)
 
