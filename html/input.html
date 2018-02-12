@@ -21,7 +21,10 @@ type="text/css" /><!-- Compiled and minified JavaScript -->
 <script src=
 "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"
 type="text/javascript">
+
 </script>
+<script src="../loadingOverlay.js"></script>
+
 <script type="text/javascript">
 //<![CDATA[
     function goToLoadingPage() {
@@ -33,6 +36,28 @@ type="text/javascript">
 //]]>
 </script><!--Let browser know website is optimized for mobile-->
 <style>
+  .loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid blue;
+  border-right: 16px solid green;
+  border-bottom: 16px solid red;
+  border-left: 16px solid pink;
+  width: 300px;
+  height: 300px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
 hr.style6 {
 	background-color: #fff;
@@ -177,7 +202,6 @@ Process</button>
 <div class="footer-copyright">
 <div class="container" align="bottom"></div>
 </div>
-
 </body>
 <script>
 
@@ -191,7 +215,14 @@ $(document).ready(function() {
   });
 
   $("#processButton").click(function() {
-    submit()
+    var spinHandle = loadingOverlay().activate();
+    setTimeout(function() {
+
+    loadingOverlay().cancel(spinHandle);
+    }, 3000);
+
+    submit();
+
 
   }
      );
