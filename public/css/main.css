@@ -1,13 +1,16 @@
 .background {
     background-image: url("/img/background.jpg");
     max-width: 100%;
-    height:auto;
-    background-size: cover;
+    height:300px;
+    background-size: 100%;
     background-repeat: no-repeat;
+    background-position-y: -180px;
 }
-
 .brand-logo {
     padding-left: 2rem;
+}
+.inline {
+    display: inline-block;
 }
 .help-tip{
     z-index:100000;
