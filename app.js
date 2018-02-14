@@ -74,7 +74,8 @@ app.post('/api/analyze',async function (req, res) {
     }
 
     var dataObj = {}
-    dataObj["freq"] = results;
+    dataObj["freq"] = results[0]["total"];
+    dataObj["timeline"] = results[0]["timeline"]
     req.session["session-data"] = dataObj
 
     console.log(results);

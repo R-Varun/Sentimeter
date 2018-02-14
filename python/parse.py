@@ -9,7 +9,7 @@ def parseInput(jsonFile):
     granularity = data["granularity"]
     stride = None
     if "stride" in data:
-        stride = data[stride]
+        stride = int(data["stride"])
 
     return input, corpus, granularity, stride
 

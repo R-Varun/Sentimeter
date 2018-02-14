@@ -86,7 +86,7 @@ $(document).ready(function() {
         if (payload["status"] == "ERROR") {
             alert("Something went wrong!");
         } else {
-            var data = payload.data.freq[0];
+            var data = payload.data.freq;
             console.log(data);
             for (var i = 0; i < data.length; i ++ ) {
                 $(".results").append(

@@ -12,57 +12,60 @@ stride = data[3]
 
 
 
-if begin is -1 and end is -1:
+if begin is -1 or end is -1:
     begin = 0
     end = len(input)
+
 elif begin < 0 or end > len(input):
-<<<<<<< HEAD
     print(json.dumps({"ERROR":"invalid granularity"}))
-=======
-    print(json.dump("invalid granularity"))
->>>>>>> bc5f8513c2b8ca35a97cdc55c1613098c62fb54a
     quit()
 
+end = min(end, len(input))
 
 contextList = []
 topicList = {}
 
+if stride < 1:
+    stride = 1
+
 if stride is None:
-    for sentence in input[begin: end]:
+    stride = len(input)
+
+counter = 0
+cur = begin
+all_topics = {}
+cumulative = []
+# print("STRIDE:",stride)
+
+for i in range( (end - begin) //stride):
+    for sentence in input[cur: cur + stride]:
         if "utterance" not in sentence:
             continue
         taggedSentences = contextsummary.posTag(sentence["utterance"])
         topic = contextsummary.sentenctExtract(taggedSentences)
         for top in topic:
             if top in topicList:
-                topicList[top] = topicList[top] + 1
+                topicList[top] += 1
+                all_topics[top] += 1
             else:
                 topicList[top] = 1
-else:
-    stride = int(stride)
-    counter = 0
+                all_topics[top] = 1
+    cur += stride
+    # print(sorted(topicList, key = lambda x : -1 * topicList[x]))
+    cumulative.append(sorted(topicList, key = lambda x : -1 * topicList[x]))
+    topicList = {}
+    
+    # counter += 1
+    # if counter >= stride:
+    #     counter = 0
+    #     sortedTopics = sorted(topicList, key = lambda x : -1 * topicList[x])
+    #     contextList.append(sortedTopics)
+    #     topicList = {}
 
-    for sentence in input[begin: end]:
-        if "utterance" not in sentence:
-            continue
-        taggedSentences = contextsummary.posTag(sentence["utterance"])
-        topic = contextsummary.sentenctExtract(taggedSentences)
-        for top in topic:
-            if top in topicList:
-                topicList[top] = topicList[top] + 1
-            else:
-                topicList[top] = 1
-        counter += 1
-        if counter >= stride:
-            counter = 0
-            sortedTopics = sorted(topicList, key = lambda x : -1 * topicList[x])
-            contextList.append(sortedTopics)
-            topicList = {}
-
-sortedTopics = sorted(topicList, key = lambda x : -1 * topicList[x])
-contextList.append(sortedTopics)
+# contextList.append(sortedTopics)
 
 """print(sortedTopics[:5])
 for x in sortedTopics[:5]:
     print(topicList[x])"""
-print(json.dumps(sortedTopics))
+print(json.dumps( {"timeline" : cumulative,
+ "total" : sorted(all_topics, key = lambda x : -1 * all_topics[x]) }))
