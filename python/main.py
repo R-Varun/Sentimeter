@@ -26,50 +26,25 @@ end = min(end, len(input))
 
 contextList = []
 sentimentList = []
-topicList = {}
+stride_topics = {}
+stride_sentiment = {}
 conversationSentiment = {}
+counter = 0
+cur = begin
+all_topics = {}
+cumulativeTopics = []
+all_sentiment = {}
+cumulativeSentiment = []
+
 
 if stride < 1:
     stride = 1
 
 if stride is None:
-<<<<<<< HEAD
     stride = len(input)
 
-counter = 0
-cur = begin
-all_topics = {}
-cumulative = []
+
 # print("STRIDE:",stride)
-=======
-    for sentence in input[begin: end]:
-        if "utterance" not in sentence:
-            continue
-
-        taggedSentences = contextsummary.posTag(sentence["utterance"])
-        speaker = sentence["speaker"]
-        #context analysis
-        topic = contextsummary.sentenctExtract(taggedSentences)
-        for top in topic:
-            if top in topicList:
-                topicList[top] = topicList[top] + 1
-            else:
-                topicList[top] = 1
-        #sentiment analysis
-        sentiment = SentimentAnalysis.sentimentAnalysis(taggedSentences)
-
-        if speaker in conversationSentiment:
-            if sentiment in conversationSentiment[speaker]:
-                conversationSentiment[speaker][sentiment] += 1
-            else:
-                conversationSentiment[speaker][sentiment] = 1
-        else:
-            conversationSentiment[speaker][sentiment] = 1
-
-else:
-    stride = int(stride)
-    counter = 0
->>>>>>> 49d98eb5376a98d0ee0178bc62165e208e4bff1a
 
 for i in range( (end - begin) //stride):
     for sentence in input[cur: cur + stride]:
@@ -81,63 +56,29 @@ for i in range( (end - begin) //stride):
         #context
         topic = contextsummary.sentenctExtract(taggedSentences)
         for top in topic:
-            if top in topicList:
-                topicList[top] += 1
-                all_topics[top] += 1
-            else:
-                topicList[top] = 1
-<<<<<<< HEAD
-                all_topics[top] = 1
-    cur += stride
-    # print(sorted(topicList, key = lambda x : -1 * topicList[x]))
-    cumulative.append(sorted(topicList, key = lambda x : -1 * topicList[x]))
-    topicList = {}
-    
-    # counter += 1
-    # if counter >= stride:
-    #     counter = 0
-    #     sortedTopics = sorted(topicList, key = lambda x : -1 * topicList[x])
-    #     contextList.append(sortedTopics)
-    #     topicList = {}
+            stride_topics[top] = stride_topics.get(top, 0) + 1
+            all_topics[top] = all_topics.get(top, 0) + 1
 
-# contextList.append(sortedTopics)
-
-"""print(sortedTopics[:5])
-for x in sortedTopics[:5]:
-    print(topicList[x])"""
-print(json.dumps( {"timeline" : cumulative,
- "total" : sorted(all_topics, key = lambda x : -1 * all_topics[x]) }))
-=======
-        # sentiment analysis
+        #sentiment
         sentiment = SentimentAnalysis.sentimentAnalysis(taggedSentences)
+        stride_sentiment[speaker][sentiment] = stride_sentiment.get(speaker, {sentiment : 0}).get(sentiment, 0) + 1
+        all_sentiment[speaker][sentiment] = all_sentiment.get(speaker, {sentiment : 0}).get(sentiment, 0) + 1
 
-        if speaker in conversationSentiment:
-            if sentiment in conversationSentiment[speaker]:
-                conversationSentiment[speaker][sentiment] += 1
-            else:
-                conversationSentiment[speaker][sentiment] = 1
-        else:
-            conversationSentiment[speaker][sentiment] = 1
 
-        counter += 1
-        if counter >= stride:
-            counter = 0
-            sortedTopics = sorted(topicList, key = lambda x : -1 * topicList[x])
+    cur += stride
 
-            contextList.append(sortedTopics)
-            sentimentList.append(conversationSentiment)
+    cumulativeTopics.append(sorted(stride_topics, key = lambda x : -1 * stride_topics[x]))
+    stride_topics = {}
+    cumulativeSentiment.append(stride_sentiment)
+    stride_sentiment = {}
 
-            conversationSentiment = {}
-            topicList = {}
 
-sortedTopics = sorted(topicList, key = lambda x : -1 * topicList[x])
-contextList.append(sortedTopics)
-sentimentList.append(conversationSentiment)
+all_topics = sorted(all_topics, key = lambda x : -1 * all_topics[x])
 
 analysisReport = {}
-analysisReport["context"] = contextList
-analysisReport["sentiment"] = conversationSentiment
-
+analysisReport["timeline"] = {"context" : cumulativeTopics, "sentiment" : cumulativeSentiment}
+analysisReport["total"] = {"context" : all_topics , "sentiment" : all_sentiment}
 
 print(json.dumps(analysisReport))
->>>>>>> 49d98eb5376a98d0ee0178bc62165e208e4bff1a
+
+
