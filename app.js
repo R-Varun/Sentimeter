@@ -66,16 +66,20 @@ app.post('/api/analyze',async function (req, res) {
 
   var ars =  [JSON.stringify(data)]
   console.log(ars)
-  PythonShell.run('python/main.py' , {mode:"json", args:ars}, function (err, results) {
+  PythonShell.run('python/main.py' , {mode:"json", args:ars, pythonPath: '/usr/local/opt/python3/bin/python3.6'}, function (err, results) {
+  
     if (err) {
+        
         console.log("PYTHON FAILED");
         res.send({status : "ERROR", message : "PYTHON SCRIPT FAILED"})
+        throw err;
         return        
     }
 
     var dataObj = {}
-    dataObj["freq"] = results[0]["total"];
-    dataObj["timeline"] = results[0]["timeline"]
+    dataObj = results[0]
+    dataObj["stride"] = data["stride"]
+    dataObj["len"] = data["data"].length;
     req.session["session-data"] = dataObj
 
     console.log(results);

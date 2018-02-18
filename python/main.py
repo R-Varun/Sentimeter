@@ -60,6 +60,10 @@ for i in range( (end - begin) //stride):
             all_topics[top] = all_topics.get(top, 0) + 1
 
         #sentiment
+        if speaker not in stride_sentiment:
+            stride_sentiment[speaker] = {}
+        if speaker not in all_sentiment:
+            all_sentiment[speaker] = {}
         sentiment = SentimentAnalysis.sentimentAnalysis(taggedSentences)
         stride_sentiment[speaker][sentiment] = stride_sentiment.get(speaker, {sentiment : 0}).get(sentiment, 0) + 1
         all_sentiment[speaker][sentiment] = all_sentiment.get(speaker, {sentiment : 0}).get(sentiment, 0) + 1

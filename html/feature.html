@@ -22,6 +22,12 @@ type="text/css" /><!-- Compiled and minified JavaScript -->
 "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"
 type="text/javascript">
 </script>
+
+<script src="/timeknots/src/d3.v2.min.js" type="application/javascript"></script>
+<script src="/timeknots/src/timeknots.js" type="application/javascript"></script>
+
+
+
 <script type="text/javascript">
 //<![CDATA[
     function goToLoadingPage() {
@@ -68,6 +74,33 @@ hr.style6 {
             </ul>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-content">
+            <div class="row">
+                    <span class="card-title col-s5">Results: Sentiment</span>
+                    
+                    <p>Polarity:  <span id="pol"> </span> </p>
+                    <p>Overall: <span id="sent"> </span> </p> 
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="card-panel">
+        <h1> Topics By Stride</h1>
+        <div id="timeline">
+        </div>
+        <h1> Sentiment By Stride</h1>
+        <div id="timeline_sentiment">
+        </div>
+
+
+    </div>
+    
+    
+
+
 </div>
 
 
@@ -76,24 +109,163 @@ hr.style6 {
 </div>
 
 </body>
+
+
 <script>
 
 
 $(document).ready(function() {
+
+    
+
     $('select').material_select();
     // $.post("/api/analyze", retObj,submitted);
     $.post("/user/data", function(payload, s, x) {
         if (payload["status"] == "ERROR") {
             alert("Something went wrong!");
         } else {
-            var data = payload.data.freq;
-            console.log(data);
-            for (var i = 0; i < data.length; i ++ ) {
+            var topics = payload.data.total.context;
+            console.log(topics);
+            for (var i = 0; i < topics.length; i ++ ) {
                 $(".results").append(
-                    `<li class="collection-item">${i + 1 + ": " + data[i]} </li>`.toString()
+                    `<li class="collection-item">${i + 1 + ": " + topics[i]} </li>`.toString()
                 );
-
             }
+
+            //load sentiment score
+            var t_sentiment = payload.data.total.sentiment;
+            // console.log(topics);
+
+            var total = payload.data.len
+            var neg = 0
+            var pos = 0
+            console.log(overall);
+            var overall_result = "DEFAULT";
+            if (overall < 0) {
+                overall_result = "negative"
+            }
+            else if (overall > 0) {
+                overall_result = "positive"
+            }
+            else {
+                overall_result = "neutral"
+            }
+            var stride = parseInt(payload.data.stride);
+
+            
+            Object.keys(t_sentiment).forEach(function(item) {
+                var sents = t_sentiment[item];
+                console.log(sents);
+                if ('negative' in sents) {
+                    neg += parseInt(sents['negative'])
+                }
+                if ('positive' in sents) {
+                    pos += parseInt(sents['positive'])
+                }
+                // total += stride
+            });
+            var overall = pos - neg
+            var polarity = ((neg + pos) / total) * 100
+            console.log(pos.toString() + " " + neg.toString() + " " + total.toString())
+            console.log("pol" )
+            console.log(polarity.toString() + "%")
+            console.log("sent" )
+            console.log(overall_result)
+            $("#pol").html(polarity.toString() + "%")
+            $("#sent").html(overall_result);
+            console.log("STRIDE")
+            console.log(payload.data.stride)
+
+
+            
+            rankMap = {}
+            for (var i = 0; i < topics.length; i ++) {
+
+                rankMap[topics[i]] = topics.length - i;
+            }
+            var timeLineData = payload.data.timeline.context
+            
+
+
+            var timeline_formatted_data = []
+            var max = 0
+            var inc = 500 / timeLineData.length
+            for (var i = 0; i < timeLineData.length; i++) {
+                
+                var fn = "None"
+                if (timeLineData.length > 0) {
+                    fn = "";
+                }
+                for (var t = 0; t < timeLineData[i].length; t++) {
+                    fn += timeLineData[i][t] + "<br>";
+                }
+
+                timeline_formatted_data.push({value: i*inc+ 1, "name": fn})
+                max = i*inc + 1;
+            }
+
+            TimeKnots.draw("#timeline", timeline_formatted_data, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
+            
+            //now timeline for sentiment
+            var sentiment = payload.data.timeline.sentiment
+            var sentiment_formatted = []
+            
+            
+            var max = 0
+            console.log(sentiment.length)
+            console.log(sentiment);
+            var inc = 500 / sentiment.length
+            for (var i = 0; i < sentiment.length; i++) {
+                var current = sentiment[i];
+                var neg = 0
+                var pos = 0 
+                Object.keys(current).forEach(function(item) {
+                    var sents = current[item];
+                    console.log(sents);
+                    if ('negative' in sents) {
+                        neg += parseInt(sents['negative'])
+                    }
+                    if ('positive' in sents) {
+                        pos += parseInt(sents['positive'])
+                    }
+
+                })
+
+                var overall = pos - neg;
+                console.log(overall);
+                var overall_result = "";
+                if (overall < 0) {
+                    overall_result = "negative"
+                }
+                else if (overall > 0) {
+                    overall_result = "positive"
+                }
+                else {
+                    overall_result = "neutral"
+                }
+                var col = "";
+                if (overall < 0) {
+                    col = "red"
+                }
+                else if (overall > 0) {
+                    col = "green"
+                }
+                else {
+                    col = "gray"
+                }
+                var rad = Math.abs(overall);
+                if (overall == 0) {
+                    rad = 1
+                }
+                console.log(rad)
+
+                sentiment_formatted.push({value: i*inc+ 1, "name":overall_result, color:col, radius:rad* 10})
+                max = i*inc + 1;
+            }
+            console.log(sentiment_formatted);
+            TimeKnots.draw("#timeline_sentiment", sentiment_formatted, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
+
+
 
         }
 

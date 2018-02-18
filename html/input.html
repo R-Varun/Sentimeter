@@ -25,6 +25,7 @@ type="text/javascript">
 </script>
 <script src="../loadingOverlay.js"></script>
 
+
 <script type="text/javascript">
 //<![CDATA[
     function goToLoadingPage() {
@@ -89,7 +90,7 @@ hr.style6 {
           <div class="input-field col s2">
               <input value=":" id="speech_delimit" type="text">
               <label class="active" for="speech_delimit">Speech Delimit</label>
-            </div>
+          </div>
           
           <div class="input-field col s2">
               <input value="-1" id="gran_start" type="text">
@@ -99,6 +100,13 @@ hr.style6 {
               <input value="-1" id="gran_end" type="text">
               <label class="active" for="gran_start">Ending</label>
           </div>
+
+          <div class="input-field col s2">
+            <input value="1" id="stride" type="text">
+            <label class="active" for="stride">Stride</label>
+          </div>
+          
+
           
         </div>
 
@@ -204,13 +212,20 @@ $(document).ready(function() {
      );
 
 function submit() {
+
   var text = $(".text-input").val();
+
   var sp_del = $("#speaker_delimit").val().replace("\\n","\n");
   var s_del = $("#speech_delimit").val()
   
   var gran_start = parseInt($("#gran_start").val()) ;
   var gran_end = parseInt($("#gran_end").val()) ;
   var gran = [gran_start, gran_end];
+
+
+  var stride = parseInt($("#stride").val()) ;
+
+  
   if (gran_start < 0 || gran_end < 0) {
     gran = [-1,-1];
   }
@@ -220,6 +235,7 @@ function submit() {
 
   retObj["granularity"] = gran;
   retObj["corpus"] = 1;
+  retObj["stride"] = stride
   split_speech = text.split(sp_del);
 
   retObj["data"] = []
