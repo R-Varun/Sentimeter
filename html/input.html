@@ -21,8 +21,8 @@ type="text/css" /><!-- Compiled and minified JavaScript -->
 <script src=
 "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"
 type="text/javascript">
-
 </script>
+<script src="../text.js"></script>
 <script src="../loadingOverlay.js"></script>
 
 
@@ -68,7 +68,7 @@ hr.style6 {
         <div class="file-field input-field">
                 <div class="btn" >
                     <span>File</span>
-                    <input type="file">
+                    <input type="file" id = "fileInput">
                 </div>
                 <div class="file-path-wrapper" id="textin" >
                     <input class="file-path validate" placeholder="Upload text file you wish to analyze" type="text">
@@ -82,7 +82,7 @@ hr.style6 {
         <div class="row">
 
         
-          <textarea class="materialize-textarea text-input" rows="12" cols="150" placeholder="Paste Text to Analyze Here" >Speaker1: I went to the park</textarea>
+          <textarea id = "fileDisplayArea" class="materialize-textarea text-input" rows="12" cols="150" placeholder="Paste Text to Analyze Here" >Speaker1: I went to the park</textarea>
           <div class="input-field col s2">
               <input value="\n" id="speaker_delimit" type="text">
               <label class="active" for="speaker_delimit">Speaker Delimiter</label>
