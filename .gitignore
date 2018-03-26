@@ -1,2 +1,4 @@
 *.pyc
-python/.idea
+python/.ide
+node_modules/
+

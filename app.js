@@ -14,9 +14,8 @@ var fs = require('fs');
 var needle = require('needle');
 var PythonShell = require('python-shell');
 var utils = require("./utils.js");
-
-
 const saltRounds = 10;
+const PYTHONPATH = '/usr/local/opt/python3/bin/python3.6'
 
 
 app.use(bodyParser.json());
