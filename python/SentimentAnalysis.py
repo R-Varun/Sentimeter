@@ -31,7 +31,7 @@ def sentimentAnalysis(tagged, corpus = None):
 def readCorpus(corpus):
     trainset = []
 
-    sents = corpus.splitLines()
+    sents = corpus.splitlines()
     for sent in sents:
         utterance, tag = sent.split("\t")
         trainset.append(sentenceToVec(utterance), tag)
