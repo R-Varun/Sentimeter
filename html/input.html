@@ -55,7 +55,7 @@ hr.style6 {
   "height:64px" />
 </div>
 </div>
-
+<div id="invisDiv" style="display: none;"></div>
 <div class="container">
 <div class="step-1 card">
   <div class="card-content">
@@ -169,7 +169,7 @@ hr.style6 {
         <div class="file-field input-field">
                 <div class="btn" >
                     <span>File</span>
-                    <input type="file">
+                    <input type="file" id = "corpusFileInput">
                 </div>
                 <div class="file-path-wrapper" >
                     <input class="file-path validate" placeholder="Upload the corpus you wish to compare against" type="text">
@@ -199,6 +199,50 @@ $(document).ready(function() {
     
   });
 
+var corpusResult;
+window.onload = function() {
+		var fileInput = document.getElementById('fileInput');
+		var fileDisplayArea = document.getElementById('fileDisplayArea');
+
+		fileInput.addEventListener('change', function(e) {
+			var file = fileInput.files[0];
+			var textType = /text.*/;
+
+			if (file.type.match(textType)) {
+				var reader = new FileReader();
+
+				reader.onload = function(e) {
+					fileDisplayArea.innerText = reader.result;
+				}
+
+				reader.readAsText(file);	
+			} else {
+				fileDisplayArea.innerText = "File not supported!";
+			}
+    });
+    
+    var corpusFileInput = document.getElementById('corpusFileInput');
+    var corpusFileDisplayArea = document.getElementById('invisDiv');
+
+    corpusFileInput.addEventListener('change', function(e) {
+        var file = corpusFileInput.files[0];
+        var textType = /text.*/;
+
+        if (file.type.match(textType)) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                corpusFileDisplayArea.innerText = reader.result;
+            }
+
+            reader.readAsText(file);	
+        } else {
+            fileDisplayArea.innerText = "File not supported!";
+        }
+    });
+}
+    
+
   $("#processButton").click(function() {
     var spinHandle = loadingOverlay().activate();
     setTimeout(function() {
@@ -214,7 +258,7 @@ $(document).ready(function() {
 function submit() {
 
   var text = $(".text-input").val();
-
+  var corpusText = $("#invisDiv").val() ;
   var sp_del = $("#speaker_delimit").val().replace("\\n","\n");
   var s_del = $("#speech_delimit").val()
   
@@ -234,11 +278,11 @@ function submit() {
   var retObj = {}
 
   retObj["granularity"] = gran;
-  retObj["corpus"] = 1;
+  retObj["corpus"] = corpusText;
   retObj["stride"] = stride
   split_speech = text.split(sp_del);
 
-  retObj["data"] = []
+  retObj["data"] = [];
   console.log(text.split(sp_del));
   for (var i = 0; i < split_speech.length; i++) {
     var spl = split_speech[i].split(s_del);
