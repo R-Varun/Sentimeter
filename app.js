@@ -65,7 +65,7 @@ app.post('/api/analyze',async function (req, res) {
 
   var ars =  [JSON.stringify(data)]
   console.log(ars)
-  PythonShell.run('python/main.py' , {mode:"json", args:ars, pythonPath: PYTHONPATH }, function (err, results) {
+  PythonShell.run('python/main.py' , {mode:"json", args:ars, pythonPath: 'C:\\Users\\Richard\\AppData\\Local\\Programs\\Python\\Python36-32\\python.exe'}, function (err, results) {
   
     if (err) {
         

@@ -1,5 +1,5 @@
 import json
-
+import nltk
 
 #returns json object
 def parseInput(jsonFile):
@@ -12,6 +12,15 @@ def parseInput(jsonFile):
         stride = int(data["stride"])
 
     return input, corpus, granularity, stride
+
+
+def sentenceToVec(aSentence):
+    tokenized = nltk.word_tokenize(aSentence)
+    tagged = nltk.pos_tag(tokenized)
+    vec = {}
+    for i in tagged:
+        vec[i[0].lower()] = i[1]
+    return vec
 
 
 #testing purposes

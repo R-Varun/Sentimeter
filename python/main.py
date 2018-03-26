@@ -7,6 +7,7 @@ import SentimentAnalysis
 data = parse.parseInput(sys.argv[1])
 #data = input.readBody()
 input = data[0]
+corpus = data[1]
 granularity = data[2]
 begin = int(granularity[0])
 end = int(granularity[1])
@@ -64,7 +65,7 @@ for i in range( (end - begin) //stride):
             stride_sentiment[speaker] = {}
         if speaker not in all_sentiment:
             all_sentiment[speaker] = {}
-        sentiment = SentimentAnalysis.sentimentAnalysis(taggedSentences)
+        sentiment = SentimentAnalysis.sentimentAnalysis(taggedSentences, corpus)
         stride_sentiment[speaker][sentiment] = stride_sentiment.get(speaker, {sentiment : 0}).get(sentiment, 0) + 1
         all_sentiment[speaker][sentiment] = all_sentiment.get(speaker, {sentiment : 0}).get(sentiment, 0) + 1
 

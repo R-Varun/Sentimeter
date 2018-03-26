@@ -1,8 +1,9 @@
 from nltk.sentiment import SentimentAnalyzer
+from nltk.classify import NaiveBayesClassifier
 import pickle
 from nltk import pos_tag
 import os
-
+from parse import sentenceToVec
 
 def createFeatureSet(tagged):
     vec = {}
@@ -19,7 +20,19 @@ def sentimentAnalysis(tagged, corpus = None):
         classifier = pickle.load(classifier_f)
         classifier_f.close()
     else:
-        #implement user corpus
-        pass
+        parsedCorpus = readCorpus(corpus)
+        sentim_analyzer = SentimentAnalyzer()
+        trainer = NaiveBayesClassifier.train
+        classifier = sentim_analyzer.train(trainer, parsedCorpus)
+
 
     return classifier.classify(createFeatureSet(tagged))
+
+def readCorpus(corpus):
+    trainset = []
+
+    sents = corpus.splitlines()
+    for sent in sents:
+        utterance, tag = sent.split("\t")
+        trainset.append(sentenceToVec(utterance), tag)
+    return trainset
