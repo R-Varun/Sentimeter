@@ -1,4 +1,6 @@
 {
+  "engines" : { "node" : ">=5.7.1" },
+
   "name": "hackgt4-2",
   "version": "1.0.0",
   "description": "mad hacks 2.0",
