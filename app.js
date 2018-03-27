@@ -62,8 +62,10 @@ app.post('/api/analyze',async function (req, res) {
   //   return;
   // }
 
-
+  data["corpus"] = "";
+  
   var ars =  [JSON.stringify(data)]
+  
   console.log(ars)
   PythonShell.run('python/main.py' , {mode:"json", args:ars}, function (err, results) {
   
