@@ -13,9 +13,9 @@ def createFeatureSet(tagged):
         vec[i[0].lower()] = i[1]
     return vec
 
-def sentimentAnalysis(tagged, corpus = None):
+def sentimentAnalysis(tagged, corpus = ""):
     classifier = None
-    if corpus == None:
+    if corpus == "":
         # print(os.listdir("."))
         classifier_f = open("./python/corpus/defaultcorpus.pickle", "rb")
         # classifier_f = open("./corpus/defaultcorpus.pickle", "rb")
