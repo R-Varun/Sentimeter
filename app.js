@@ -40,6 +40,9 @@ app.get("/", function(req, res) {
 app.get("/input", function(req, res) {
   res.sendFile('html/input.html' , { root : __dirname});
 });
+app.get("/login", function(req, res) {
+  res.sendFile('html/login.html' , { root : __dirname});
+});
 
 app.post("/user/data", async function(req, res) {
   if (typeof req.session["session-data"] === 'undefined') {

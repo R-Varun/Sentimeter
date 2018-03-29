@@ -25,6 +25,7 @@ type="text/javascript">
 
 <script src="/timeknots/src/d3.v2.min.js" type="application/javascript"></script>
 <script src="/timeknots/src/timeknots.js" type="application/javascript"></script>
+<script src="../loadingOverlay.js"></script>
 
 
 
@@ -97,6 +98,10 @@ hr.style6 {
 
 
     </div>
+    <div align="center">
+        <button type="button" id="exportButton" class="waves-light grey btn-large">
+        Export Results to Excel</button>
+    </div>
     
     
 
@@ -117,7 +122,21 @@ hr.style6 {
 $(document).ready(function() {
 
     
+    $("#exportButton").click(function() {
+    var spinHandle = loadingOverlay().activate();
+    setTimeout(function() {
 
+    loadingOverlay().cancel(spinHandle);
+    }, 3000);
+
+    submit();
+
+  }
+     );
+
+function submit() {
+    //hook this up to the code to export to excel sheet.
+}
     $('select').material_select();
     // $.post("/api/analyze", retObj,submitted);
     $.post("/user/data", function(payload, s, x) {
