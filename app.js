@@ -16,7 +16,7 @@ var PythonShell = require('python-shell');
 var utils = require("./utils.js");
 const saltRounds = 10;
 
-const PYTHONPATH = '/usr/local/opt/python3/bin/python3.6'
+// const PYTHONPATH = '/usr/local/opt/python3/bin/python3.6'
 
 
 app.use(bodyParser.json());
@@ -71,7 +71,7 @@ app.post('/api/analyze',async function (req, res) {
   var ars =  [JSON.stringify(data)]
   
   console.log(ars)
-  PythonShell.run('python/main.py' , {mode:"json", args:ars, pythonPath:PYTHONPATH}, function (err, results) {
+  PythonShell.run('python/main.py' , {mode:"json", args:ars}, function (err, results) {
     if (err) {
         
         console.log("PYTHON FAILED");

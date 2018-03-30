@@ -55,7 +55,7 @@ hr.style6 {
   "height:64px" />
 </div>
 </div>
-<div id="invisDiv" style="display:none"><textarea id = "corpusDisplayArea" class="materialize-textarea text-input"></textarea></div>
+<textarea id = "corpusDisplayArea" class="materialize-textarea text-input"></textarea>
 
 
 <div class="container">
@@ -271,9 +271,10 @@ window.onload = function() {
 function submit() {
 
   var text = $("#fileDisplayArea").val();
-  var corpusText = $("#corpusDisplayArea").val();
+  var corpusTextRaw = $("#corpusDisplayArea").val();
 
   console.log(corpusText);
+  var corpusText = corpusTextRaw.replace("\\t", "\t").replace("\\n", "\n")
   var sp_del = $("#speaker_delimit").val().replace("\\n","\n");
   var s_del = $("#speech_delimit").val()
   
