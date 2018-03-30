@@ -34,6 +34,12 @@ type="text/javascript">
     function goToHomePage() {
         document.location.href = '/'
     }
+    function goToLoginPage() {
+        document.location.href = 'login'
+    }
+    function goToHistoryPage() {
+        document.location.href = 'history'
+    }
 //]]>
 </script><!--Let browser know website is optimized for mobile-->
 <style>
@@ -53,8 +59,10 @@ hr.style6 {
   <input type="image" id="myimage" onclick="goToHomePage()" src=
   "/../img/Sentimeter_logo.jpg" style=
   "height:64px" />
+  <button type="button" style = "height:inherit; float: right; color: orange" id = "LoginButton" onclick="goToLoginPage()">Logout</button>
 </div>
 </div>
+<button type="button" style = "display: block; margin: 0 auto; height:inherit; color: blue" id = "viewHistoryButton" onclick="goToHistoryPage()">View Past Results</button>
 <textarea style ="width: 0px; height: 0px; visibility:hidden" id = "corpusDisplayArea" class="materialize-textarea text-input"></textarea>
 <div class="container">
 <div class="step-1 card">
