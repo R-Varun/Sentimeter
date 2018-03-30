@@ -35,7 +35,8 @@ def readCorpus(corpus):
 
     sents = corpus.splitlines()
     for sent in sents:
-        utterance, tag = sent.split("\t")
-        trainset.append(sentenceToVec(utterance), tag)
+        if "\t" in sent:
+            utterance, tag = sent.split("\t")
+            trainset.append(sentenceToVec(utterance), tag)
     return trainset
 
