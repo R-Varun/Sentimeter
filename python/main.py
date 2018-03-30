@@ -89,7 +89,6 @@ all_topics = sorted(all_topics, key = lambda x : -1 * all_topics[x])
 analysisReport = {}
 analysisReport["timeline"] = {"context" : cumulativeTopics, "sentiment" : cumulativeSentiment}
 analysisReport["total"] = {"context" : all_topics , "sentiment" : all_sentiment}
-print (tagList)
 analysisReport["classes"] = tagList
 
 print(json.dumps(analysisReport))
