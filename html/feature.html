@@ -153,13 +153,19 @@ function submit() {
 
             //load sentiment score
             var t_sentiment = payload.data.total.sentiment;
+            //load tag list
+            var tag_list = payload.data.classes;
             // console.log(topics);
 
             var total = payload.data.len
             var neg = 0
             var pos = 0
+
+            
             console.log(overall);
+            
             var overall_result = "DEFAULT";
+
             if (overall < 0) {
                 overall_result = "negative"
             }
@@ -169,28 +175,56 @@ function submit() {
             else {
                 overall_result = "neutral"
             }
-            var stride = parseInt(payload.data.stride);
 
+
+
+            var stride = parseInt(payload.data.stride);
             
+
+            var tagCum = {};
+            tag_list.forEach(function(item) {
+
+                tagCum[item] = 0;
+            })
+            
+            console.log(t_sentiment);
             Object.keys(t_sentiment).forEach(function(item) {
                 var sents = t_sentiment[item];
                 console.log(sents);
+                /*
                 if ('negative' in sents) {
                     neg += parseInt(sents['negative'])
                 }
                 if ('positive' in sents) {
                     pos += parseInt(sents['positive'])
-                }
+                }*/
+                tag_list.forEach(function(tag) {
+                    tagCum[tag] += 1;
+                    
+                })
+                
                 // total += stride
             });
+            var max_sent = null;
+            var max_sent_val = 0;
+            tag_list.forEach(function(tag) {
+                if (max_sent == null) {
+                    max_sent = tag;
+                    max_sent_val = tagCum[tag]
+
+                } else if (max_sent_val < tagCum[tag]) {
+                    max_sent = tag;
+                    max_sent_val = tagCum[tag]
+                }
+            })
             var overall = pos - neg
-            var polarity = ((neg + pos) / total) * 100
+            var polarity = 0
             
 
             // set polarity
             $("#pol").html(polarity.toString() + "%")
             // set overall
-            $("#sent").html(overall_result);
+            $("#sent").html(max_sent);
             console.log("STRIDE")
             console.log(payload.data.stride)
 
@@ -220,7 +254,7 @@ function submit() {
                 timeline_formatted_data.push({value: i*inc+ 1, "name": fn})
                 max = i*inc + 1;
             }
-            max = Math.min(max, 100);
+            max = Math.max(max, 100);
 
             TimeKnots.draw("#timeline", timeline_formatted_data, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
             
@@ -279,7 +313,7 @@ function submit() {
                 sentiment_formatted.push({value: i*inc+ 1, "name":overall_result, color:col, radius:rad* 10})
                 max = i*inc + 1;
             }
-            max = Math.min(max, 100);
+            max = Math.max(max, 100);
             console.log(sentiment_formatted);
             TimeKnots.draw("#timeline_sentiment", sentiment_formatted, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
         }
