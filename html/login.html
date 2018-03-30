@@ -62,7 +62,7 @@
                             <input type="text" id="username" class="span6" name="username" placeholder="User ID">
                             <input type="password" id="password" class="span6" name="password" placeholder="Password">
                             <hr>
-                            <button type="submit" onclick = "goToInputPage()" name="submit" class="btn btn-info btn-block">Sign in</button>
+                            <button type="button" id="login" name="submit" class="btn btn-info btn-block">Sign in</button>
                         </form>
                     </div>
                 </div>
@@ -74,15 +74,11 @@
                             <h5>Registration</h5>
                         </legend>
                         <form id="tab">
-                            <input type="text" class="span6" name="name" placeholder="First Name">
-                            <input type="text" class="span6" name="LastName" placeholder="Last Name">
-                            <input type="text" class="span6" name="email" placeholder="Email">
-                            <input type="text" class="span6" name="telephone" placeholder="Telephone">
-                            <textarea rows="3" class="span6" name="address" placeholder="Address"></textarea>
-                            <input type="password" class="span6" name="password" placeholder="Password">
-                            <input type="password" class="span6" name="password2" placeholder="Re-enter Password">
+                            <input type="text" class="span6" name="email" id="email_register" placeholder="Email">
+                            <input type="password" class="span6" name="password" id="password_register" placeholder="Password">
+                            <input type="password" class="span6" name="password2" id="cpassword_register" placeholder="Re-enter Password">
                             <div>
-                                <button type="submit" name="register" class="btn btn-primary btn-block">Register</button>
+                                <button type="button" name="register" id="register_btn" class="btn btn-primary btn-block">Register</button>
                             </div>
                         </form>
                     </div>
@@ -97,5 +93,51 @@
 </body>
 
 
+<script>
+$("#login").click(function() {
+    var reqObj = {}
+    reqObj["username"] = $("#username").val();
+    reqObj["password"] = $("#password").val();
+    
+    $.post(
+        "/login",
+        reqObj,
+        function(data, status, jqXHR) {
+            if (data.status === "SUCCESS") {
+                // window.location = "/session";
+                console.log("LOG IN SUCCESS")
 
+            } else {
+                console.log("LOG IN FAILED")
+                // $("#reason").html("<small>" + data.reason + "</small>");
+            }
+        }
+    )
+});
+
+$("#register_btn").click(function() {
+                // confirm pass eq
+                var pass = $("#password_register").val();
+                var c_pass = $("#cpassword_register").val();
+                var email = $("#email_register").val();
+                if (c_pass != pass) {
+                    alert("Password must be same as confirmation!");
+                    return;
+                }
+                $.post("/register",
+                    {username: email, password: pass},
+                    function(data, s, x) {
+                        if (typeof data !== 'undefined') {
+                            if (data.status == "SUCCESS") {
+                                alert("Registration success");
+                                // window.location = "/login";
+                            } else {
+                                alert(data.reason);
+                            }
+                        }
+                    }
+                )
+            });
+
+</script>$
 </html>
