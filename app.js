@@ -195,14 +195,19 @@ function checkCred(user, pass, callback) {
       if (result == null) {
         return callback({"valid": false, "reason": "User does not exist"});
       }
-      var pass_hash = result.Password;
+      var pass_hash = result.PASSWORD;
+      console.log(pass_hash)
+      console.log(pass);
       bcrypt.compare(pass ,pass_hash, function(err, res) {
         //will return res of true if passwords are same
         if (err) {
+          console.log(err);
           return callback({"valid": false, "reason": "Invalid Credentials"});
         }
         
         var newresult = {};
+        console.log("res")
+        console.log(res);
         if (res) {
           newresult = {"valid": true}
         } else {
