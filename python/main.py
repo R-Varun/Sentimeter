@@ -47,6 +47,12 @@ if stride is None:
 
 # print("STRIDE:",stride)
 
+
+#trains corpus
+classifier, tagList = SentimentAnalysis.trainCorpus(corpus)
+
+
+#parses input
 for i in range( (end - begin) //stride):
     for sentence in input[cur: cur + stride]:
         if "utterance" not in sentence:
@@ -65,7 +71,7 @@ for i in range( (end - begin) //stride):
             stride_sentiment[speaker] = {}
         if speaker not in all_sentiment:
             all_sentiment[speaker] = {}
-        sentiment = SentimentAnalysis.sentimentAnalysis(taggedSentences, corpus)
+        sentiment = SentimentAnalysis.sentimentAnalysis(classifier, taggedSentences)
         stride_sentiment[speaker][sentiment] = stride_sentiment.get(speaker, {sentiment : 0}).get(sentiment, 0) + 1
         all_sentiment[speaker][sentiment] = all_sentiment.get(speaker, {sentiment : 0}).get(sentiment, 0) + 1
 
@@ -83,6 +89,8 @@ all_topics = sorted(all_topics, key = lambda x : -1 * all_topics[x])
 analysisReport = {}
 analysisReport["timeline"] = {"context" : cumulativeTopics, "sentiment" : cumulativeSentiment}
 analysisReport["total"] = {"context" : all_topics , "sentiment" : all_sentiment}
+print (tagList)
+analysisReport["classes"] = tagList
 
 print(json.dumps(analysisReport))
 
