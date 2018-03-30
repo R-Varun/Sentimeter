@@ -25,6 +25,7 @@ type="text/javascript">
 
 <script src="/timeknots/src/d3.v2.min.js" type="application/javascript"></script>
 <script src="/timeknots/src/timeknots.js" type="application/javascript"></script>
+<script src="../loadingOverlay.js"></script>
 
 
 
@@ -97,6 +98,10 @@ hr.style6 {
 
 
     </div>
+    <div align="center">
+        <button type="button" id="exportButton" class="waves-light grey btn-large">
+        Export Results to Excel</button>
+    </div>
     
     
 
@@ -117,7 +122,21 @@ hr.style6 {
 $(document).ready(function() {
 
     
+    $("#exportButton").click(function() {
+    var spinHandle = loadingOverlay().activate();
+    setTimeout(function() {
 
+    loadingOverlay().cancel(spinHandle);
+    }, 3000);
+
+    submit();
+
+  }
+     );
+
+function submit() {
+    //hook this up to the code to export to excel sheet.
+}
     $('select').material_select();
     // $.post("/api/analyze", retObj,submitted);
     $.post("/user/data", function(payload, s, x) {
@@ -166,12 +185,11 @@ $(document).ready(function() {
             });
             var overall = pos - neg
             var polarity = ((neg + pos) / total) * 100
-            console.log(pos.toString() + " " + neg.toString() + " " + total.toString())
-            console.log("pol" )
-            console.log(polarity.toString() + "%")
-            console.log("sent" )
-            console.log(overall_result)
+            
+
+            // set polarity
             $("#pol").html(polarity.toString() + "%")
+            // set overall
             $("#sent").html(overall_result);
             console.log("STRIDE")
             console.log(payload.data.stride)
@@ -191,7 +209,6 @@ $(document).ready(function() {
             var max = 0
             var inc = 500 / timeLineData.length
             for (var i = 0; i < timeLineData.length; i++) {
-                
                 var fn = "None"
                 if (timeLineData.length > 0) {
                     fn = "";
@@ -203,6 +220,7 @@ $(document).ready(function() {
                 timeline_formatted_data.push({value: i*inc+ 1, "name": fn})
                 max = i*inc + 1;
             }
+            max = Math.min(max, 100);
 
             TimeKnots.draw("#timeline", timeline_formatted_data, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
             
@@ -258,15 +276,12 @@ $(document).ready(function() {
                     rad = 1
                 }
                 console.log(rad)
-
                 sentiment_formatted.push({value: i*inc+ 1, "name":overall_result, color:col, radius:rad* 10})
                 max = i*inc + 1;
             }
+            max = Math.min(max, 100);
             console.log(sentiment_formatted);
             TimeKnots.draw("#timeline_sentiment", sentiment_formatted, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
-
-
-
         }
 
     });

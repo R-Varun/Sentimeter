@@ -15,6 +15,7 @@ var needle = require('needle');
 var PythonShell = require('python-shell');
 var utils = require("./utils.js");
 const saltRounds = 10;
+
 const PYTHONPATH = '/usr/local/opt/python3/bin/python3.6'
 
 
@@ -39,6 +40,9 @@ app.get("/", function(req, res) {
 });
 app.get("/input", function(req, res) {
   res.sendFile('html/input.html' , { root : __dirname});
+});
+app.get("/login", function(req, res) {
+  res.sendFile('html/login.html' , { root : __dirname});
 });
 
 app.post("/user/data", async function(req, res) {
@@ -67,8 +71,7 @@ app.post('/api/analyze',async function (req, res) {
   var ars =  [JSON.stringify(data)]
   
   console.log(ars)
-  PythonShell.run('python/main.py' , {mode:"json", args:ars}, function (err, results) {
-  
+  PythonShell.run('python/main.py' , {mode:"json", args:ars, pythonPath:PYTHONPATH}, function (err, results) {
     if (err) {
         
         console.log("PYTHON FAILED");

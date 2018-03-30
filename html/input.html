@@ -55,6 +55,8 @@ hr.style6 {
   "height:64px" />
 </div>
 </div>
+<div id="invisDiv" style="display:none"><textarea id = "corpusDisplayArea" class="materialize-textarea text-input"></textarea></div>
+
 
 <div class="container">
 <div class="step-1 card">
@@ -80,31 +82,42 @@ hr.style6 {
         <hr class="style6">
         <br>
         <div class="row">
-
-        
           <textarea id = "fileDisplayArea" class="materialize-textarea text-input" rows="12" cols="150" placeholder="Paste Text to Analyze Here" >Speaker1: I went to the park</textarea>
-          <div class="input-field col s2">
-              <input value="\n" id="speaker_delimit" type="text">
-              <label class="active" for="speaker_delimit">Speaker Delimiter</label>
-            </div>
-          <div class="input-field col s2">
-              <input value=":" id="speech_delimit" type="text">
-              <label class="active" for="speech_delimit">Speech Delimit</label>
-          </div>
           
-          <div class="input-field col s2">
-              <input value="-1" id="gran_start" type="text">
-              <label class="active" for="gran_start">Starting</label>
-          </div>
-          <div class="input-field col s2">
-              <input value="-1" id="gran_end" type="text">
-              <label class="active" for="gran_start">Ending</label>
+          <button data-target="optionsModal" class="btn modal-trigger">Options</button>
+          <div id="optionsModal" class="modal">
+            <div class="modal-content">
+              <div class="input-field col s2">
+                <input value="\n" id="speaker_delimit" type="text">
+                <label class="active" for="speaker_delimit">Speaker Delimiter</label>
+              </div>
+            <div class="input-field col s2">
+                <input value=":" id="speech_delimit" type="text">
+                <label class="active" for="speech_delimit">Speech Delimit</label>
+            </div>
+            
+            <div class="input-field col s2">
+                <input value="-1" id="gran_start" type="text">
+                <label class="active" for="gran_start">Starting</label>
+            </div>
+            <div class="input-field col s2">
+                <input value="-1" id="gran_end" type="text">
+                <label class="active" for="gran_start">Ending</label>
+            </div>
+  
+            <div class="input-field col s2">
+              <input value="1" id="stride" type="text">
+              <label class="active" for="stride">Stride</label>
+            </div>
+
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+              
+            </div>
           </div>
 
-          <div class="input-field col s2">
-            <input value="1" id="stride" type="text">
-            <label class="active" for="stride">Stride</label>
-          </div>
+          
           
 
           
@@ -169,7 +182,7 @@ hr.style6 {
         <div class="file-field input-field">
                 <div class="btn" >
                     <span>File</span>
-                    <input type="file">
+                    <input type="file" id = "corpusFileInput">
                 </div>
                 <div class="file-path-wrapper" >
                     <input class="file-path validate" placeholder="Upload the corpus you wish to compare against" type="text">
@@ -193,11 +206,55 @@ Process</button>
 
 $(document).ready(function() {
     $('select').material_select();
+    $('.modal').modal();
 
     
 
     
   });
+
+window.onload = function() {
+		var fileInput = document.getElementById('fileInput');
+		var fileDisplayArea = document.getElementById('fileDisplayArea');
+
+		fileInput.addEventListener('change', function(e) {
+			var file = fileInput.files[0];
+			var textType = /text.*/;
+
+			if (file.type.match(textType)) {
+				var reader = new FileReader();
+
+				reader.onload = function(e) {
+					fileDisplayArea.innerText = reader.result;
+				}
+
+				reader.readAsText(file);	
+			} else {
+				fileDisplayArea.innerText = "File not supported!";
+			}
+    });
+    
+    var corpusFileInput = document.getElementById('corpusFileInput');
+    var corpusFileDisplayArea = document.getElementById('corpusDisplayArea');
+
+    corpusFileInput.addEventListener('change', function(e) {
+        var file = corpusFileInput.files[0];
+        var textType = /text.*/;
+
+        if (file.type.match(textType)) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                corpusFileDisplayArea.innerText = reader.result;
+            }
+
+            reader.readAsText(file);	
+        } else {
+            fileDisplayArea.innerText = "File not supported!";
+        }
+    });
+}
+    
 
   $("#processButton").click(function() {
     var spinHandle = loadingOverlay().activate();
@@ -213,8 +270,8 @@ $(document).ready(function() {
 
 function submit() {
 
-  var text = $(".text-input").val();
-
+  var text = $("#fileDisplayArea").val();
+  var corpusText = $("#corpusDisplayArea").val() ;
   var sp_del = $("#speaker_delimit").val().replace("\\n","\n");
   var s_del = $("#speech_delimit").val()
   
@@ -234,11 +291,11 @@ function submit() {
   var retObj = {}
 
   retObj["granularity"] = gran;
-  retObj["corpus"] = 1;
-  retObj["stride"] = stride
+  retObj["corpus"] = corpusText;
+  retObj["stride"] = stride;
   split_speech = text.split(sp_del);
 
-  retObj["data"] = []
+  retObj["data"] = [];
   console.log(text.split(sp_del));
   for (var i = 0; i < split_speech.length; i++) {
     var spl = split_speech[i].split(s_del);

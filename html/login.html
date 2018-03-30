@@ -1,0 +1,101 @@
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="/css/main.css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import jQuery before materialize.js-->
+        <script type="text/javascript"            src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+        <link type="text/css" rel="stylesheet" href="/css/main.css" />
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        <script type = "text/javascript">
+         function goToInputPage() {
+            document.location.href = 'input'
+         }
+         function goToHomePage() {
+            document.location.href = '/'
+        }
+        </script>
+        <!--Let browser know website is optimized for mobile-->
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <header>
+            <div class="navbar-fixed" style="color:black">
+                <nav class="white accent-1">
+    
+                    <div class="nav-wrapper">
+                            <input type="image" id="myimage" onclick = "goToHomePage()" src="/../img/Sentimeter_logo.jpg" style = "height: inherit" />
+                            <!-- <input type="image" id="homeImage" onclick = "goToHomePage()" src="https://dummyimage.com/85.33x66/000000/ffffff.png&text=Home" style = "height: inherit" />
+                            <input type="image" id="demoImage" onclick = "goToHomePage()" src="https://dummyimage.com/85.33x66/000000/ffffff.png&text=Demo" style = "height: inherit" />
+                            <input type="image" id="peopleImage" onclick = "goToHomePage()" src="https://dummyimage.com/85.33x66/000000/ffffff.png&text=People" style = "height: inherit" />
+                            <input type="image" id="contactImage" onclick = "goToHomePage()" src="https://dummyimage.com/85.33x66/000000/ffffff.png&text=Contact" style = "height: inherit" /> -->
+                    </div>
+                </nav>
+            </div>
+        </header>
+    <body class="grey lighten-3">
+    <div class="container-narrow">
+        <div class="masthead" style = "font-size: 100px; color: orange">
+             <div align = "center"><i>Sentimeter</i></h3>
+        </div>
+        </div>
+        <hr>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#home" data-toggle="tab"><i class="icon-user"></i> User Login</a>
+            </li>
+            <li><a href="#profile" data-toggle="tab"><i class="icon-pencil"></i> User Registration</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane active in" id="home">
+                <div class="row">
+                    <div class="span6 offset1 well">
+                        <legend>
+                            <h5>Please Sign In</h5>
+                        </legend>
+                        <form method="POST" action="" accept-charset="UTF-8">
+                            <input type="text" id="username" class="span6" name="username" placeholder="User ID">
+                            <input type="password" id="password" class="span6" name="password" placeholder="Password">
+                            <hr>
+                            <button type="submit" onclick = "goToInputPage()" name="submit" class="btn btn-info btn-block">Sign in</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile">
+                <div class="row">
+                    <div class="span6 offset1 well">
+                        <legend>
+                            <h5>Registration</h5>
+                        </legend>
+                        <form id="tab">
+                            <input type="text" class="span6" name="name" placeholder="First Name">
+                            <input type="text" class="span6" name="LastName" placeholder="Last Name">
+                            <input type="text" class="span6" name="email" placeholder="Email">
+                            <input type="text" class="span6" name="telephone" placeholder="Telephone">
+                            <textarea rows="3" class="span6" name="address" placeholder="Address"></textarea>
+                            <input type="password" class="span6" name="password" placeholder="Password">
+                            <input type="password" class="span6" name="password2" placeholder="Re-enter Password">
+                            <div>
+                                <button type="submit" name="register" class="btn btn-primary btn-block">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="footer">
+                <p>&copy; Sentimeter 2018</p>
+            </div>
+        </div>
+        <!-- /container -->
+</body>
+
+
+
+</html>

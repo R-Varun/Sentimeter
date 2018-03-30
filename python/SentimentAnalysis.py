@@ -1,7 +1,9 @@
-from nltk.sentiment import SentimentAnalyzer
+#from nltk.sentiment import SentimentAnalyzer
 from nltk.classify import NaiveBayesClassifier
 import pickle
+from SentimentAnalyzer import *
 from nltk import pos_tag
+
 import os
 from parse import sentenceToVec
 
@@ -36,3 +38,4 @@ def readCorpus(corpus):
         utterance, tag = sent.split("\t")
         trainset.append(sentenceToVec(utterance), tag)
     return trainset
+
