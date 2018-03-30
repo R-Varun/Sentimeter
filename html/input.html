@@ -188,6 +188,19 @@ hr.style6 {
         </div>
     </div>
 </div>
+<div class="step-4 card">
+  <div class="card-content">
+      <div class="row">
+              <span class="card-title col-s5">Step 4: Name Your Results</span>
+      </div>
+                  
+      <div class="file-field input-field">
+              <div class="file-path-wrapper" >
+                  <input id = "resultsName" placeholder="" type="text">
+              </div>
+      </div>
+  </div>
+</div>
 </div>
 
 <div align="center">
@@ -270,6 +283,7 @@ function submit() {
 
   var text = $("#fileDisplayArea").val();
   var corpusTextRaw = $("#corpusDisplayArea").val();
+  var resultsName = $("#resultsName").val();
 
   console.log(corpusText);
   var corpusText = corpusTextRaw.replace("\\t", "\t").replace("\\n", "\n")
@@ -294,6 +308,7 @@ function submit() {
   retObj["granularity"] = gran;
   retObj["corpus"] = corpusText;
   retObj["stride"] = stride;
+  retObj["resultsName"] = resultsName;
   split_speech = text.split(sp_del);
 
   retObj["data"] = [];
