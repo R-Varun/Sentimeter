@@ -220,8 +220,8 @@ function submit() {
                 timeline_formatted_data.push({value: i*inc+ 1, "name": fn})
                 max = i*inc + 1;
             }
-            max = Math.min(max, 100);
-
+            max = Math.max(max, 100);
+            
             TimeKnots.draw("#timeline", timeline_formatted_data, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
             
             //now timeline for sentiment
@@ -279,7 +279,7 @@ function submit() {
                 sentiment_formatted.push({value: i*inc+ 1, "name":overall_result, color:col, radius:rad* 10})
                 max = i*inc + 1;
             }
-            max = Math.min(max, 100);
+            max = Math.max(max, 100);
             console.log(sentiment_formatted);
             TimeKnots.draw("#timeline_sentiment", sentiment_formatted, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
         }
