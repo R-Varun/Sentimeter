@@ -1,3 +1,4 @@
+
 var bodyParser = require('body-parser')
 var express = require('express')
 var app = express()
@@ -19,7 +20,7 @@ var validator = require('validator');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt')
 const saltRounds = 10;
-
+const moment = require("moment");
 
 const PYTHONPATH = '/usr/local/opt/python3/bin/python3.6'
 var pool  = mysql.createPool({
@@ -103,6 +104,33 @@ app.post('/api/analyze',async function (req, res) {
   // }
 
   // data["corpus"] = "";
+  var query = data.resultsName;
+  var username = req.session["user"];
+  var datetime = moment.utc().format();
+  console.log(datetime);
+  if (username) {
+
+    connection.execute("SET FOREIGN_KEY_CHECKS=0",
+    [],
+    function(err, results, fields) {
+      connection.execute(
+        //passed all fields, start putting into database wtih User table first
+        "insert into submission (Queryname, Username, Querydate) values (?, ?, ?)",
+        [query, username, datetime],
+        function(err, results, fields) {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            console.log("SUBMISSION ADDED");
+        });
+    }
+    );
+    
+  }
+  
+
+
   
   var ars =  [JSON.stringify(data)]
   
@@ -156,7 +184,26 @@ function error(err) {
   console.log(err);
 }
 
+app.get("/submissions", function(req, res) {
+  if (typeof req.session.user === 'undefined') {
+    res.send({"status":"FAILURE", reason : "No User Logged In" });
+    return;
+  }
+  var user = req.session.user;
+  connection.execute(
+    "select * from Submission where username = ?",
+    [user],
+    function(err, results, fields) {
+      if (err || results.length == 0) {
+        res.send({"status":"FAILURE", reason : "No Submissions" });        
+        return 
+      }
+      res.send({"status":"SUCCESS", data: results});
+      
+    })
 
+  
+});
 
 app.get("/results.html", function(req, res) {
   res.sendFile('html/results.html' , { root : __dirname});

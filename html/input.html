@@ -59,11 +59,12 @@ hr.style6 {
   <input type="image" id="myimage" onclick="goToHomePage()" src=
   "/../img/Sentimeter_logo.jpg" style=
   "height:64px" />
+  <a onclick="goToHistoryPage()">View Past Results</a>
+  
   <button type="button" style = "height:inherit; float: right; color: orange" id = "LoginButton" onclick="goToLoginPage()">Logout</button>
 </div>
 </div>
-<button type="button" style = "display: block; margin: 0 auto; height:inherit; color: blue" id = "viewHistoryButton" onclick="goToHistoryPage()">View Past Results</button>
-<textarea style ="width: 0px; height: 0px; visibility:hidden" id = "corpusDisplayArea" class="materialize-textarea text-input"></textarea>
+<textarea style ="width: 0px;min-width: 0px; min-height:0;padding:0!important; height: 0px; visibility:hidden" id = "corpusDisplayArea" class="materialize-textarea text-input"></textarea>
 <div class="container">
 <div class="step-1 card">
   <div class="card-content">
