@@ -105,7 +105,7 @@ app.post('/api/analyze',async function (req, res) {
   var ars =  [JSON.stringify(data)]
   
   console.log(ars)
-  PythonShell.run('python/main.py' , {mode:"json", args:ars, pythonPath:PYTHONPATH}, function (err, results) {
+  PythonShell.run('python/main.py' , {mode:"json", args:ars}, function (err, results) {
     if (err) {
         
         console.log("PYTHON FAILED");
