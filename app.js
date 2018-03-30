@@ -78,7 +78,9 @@ app.get("/input", function(req, res) {
 app.get("/login", function(req, res) {
   res.sendFile('html/login.html' , { root : __dirname});
 });
-
+app.get("/history", function(req, res) {
+  res.sendFile('html/history.html' , { root : __dirname});
+});
 app.post("/user/data", async function(req, res) {
   if (typeof req.session["session-data"] === 'undefined') {
     res.send({status : "ERROR", message : "NO DATA AVAILABLE"});
