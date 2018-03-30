@@ -271,7 +271,9 @@ window.onload = function() {
 function submit() {
 
   var text = $("#fileDisplayArea").val();
-  var corpusText = $("#corpusDisplayArea").val() ;
+  var corpusText = $("#corpusDisplayArea").val();
+
+  console.log(corpusText);
   var sp_del = $("#speaker_delimit").val().replace("\\n","\n");
   var s_del = $("#speech_delimit").val()
   

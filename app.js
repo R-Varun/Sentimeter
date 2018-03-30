@@ -66,7 +66,7 @@ app.post('/api/analyze',async function (req, res) {
   //   return;
   // }
 
-  data["corpus"] = "";
+  // data["corpus"] = "";
   
   var ars =  [JSON.stringify(data)]
   
