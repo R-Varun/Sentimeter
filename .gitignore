@@ -1,4 +1,5 @@
 *.pyc
 python/.ide
 node_modules/
-
+*.idea
+python/.idea
