@@ -37,6 +37,69 @@ type="text/javascript">
     function goToHomePage() {
         document.location.href = '/'
     }
+
+    function convertJSONToCSV(json) {
+        if(json == null) return null;
+        var results
+
+        columnDelimiter = ',';
+        lineDelimiter = '\n';
+
+        topics = json["total"]["context"]
+        sentiment = json["total"]["sentiment"]
+
+        results = '';
+        results += 'topics';
+
+        for (var i = 0; i < topics.length; i ++ ) {
+            results += columnDelimiter;
+            results += topics[i];
+        }
+
+
+        var speakers = Object.keys(sentiment);
+        for (var j = 0; j < speakers.length; j ++ ) {
+            results += lineDelimiter;
+            results += speakers[j];
+
+            for (var key in sentiment[speakers[j]]) {
+
+                results += key;
+                results += columnDelimiter;
+            }
+        }
+
+        return result;
+    }
+
+    function exportToExcel(filename, json) {
+        Console.log("reached");
+        var csvFile;
+        var downloadLink;
+        var csv = convertJSONToCSV(json);
+        if (csv == null) csvFile = new Blob([''], {type: "text/csv"});
+        // CSV file
+        else csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link
+        downloadLink = document.createElement("a");
+
+        // File name
+        downloadLink.download = filename;
+
+        // Create a link to the file
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // Hide download link
+        downloadLink.style.display = "none";
+
+        // Add the link to DOM
+        document.body.appendChild(downloadLink);
+
+        // Click download link
+        downloadLink.click();
+    }
+
 //]]>
 </script><!--Let browser know website is optimized for mobile-->
 <style>
@@ -65,12 +128,12 @@ hr.style6 {
         <div class="card-content">
             <div class="row">
                     <span class="card-title col-s5">Results: Topics Discussed</span>
-                    
+
                     <div class="help-tip col-s1 offset-s6">
                         <p>The below list is sorted by relevance to the conversation</p>
                     </div>
             </div>
-                        
+
             <ul class="collection results">
             </ul>
         </div>
@@ -80,12 +143,12 @@ hr.style6 {
         <div class="card-content">
             <div class="row">
                     <span class="card-title col-s5">Results: Sentiment</span>
-                    
+
                     <p>Polarity:  <span id="pol"> </span> </p>
-                    <p>Overall: <span id="sent"> </span> </p> 
+                    <p>Overall: <span id="sent"> </span> </p>
             </div>
         </div>
-        
+
     </div>
 
     <div class="card-panel">
@@ -102,8 +165,8 @@ hr.style6 {
         <button type="button" id="exportButton" class="waves-light grey btn-large">
         Export Results to Excel</button>
     </div>
-    
-    
+
+
 
 
 </div>
@@ -118,31 +181,34 @@ hr.style6 {
 
 <script>
 
-
+var currentData;
 $(document).ready(function() {
 
-    
+
     $("#exportButton").click(function() {
     var spinHandle = loadingOverlay().activate();
     setTimeout(function() {
-
+    submit();
     loadingOverlay().cancel(spinHandle);
     }, 3000);
 
-    submit();
+
 
   }
      );
 
 function submit() {
-    //hook this up to the code to export to excel sheet.
+    Console.log("submit called");
+    exportToExcel(filename, currentData);
 }
+
     $('select').material_select();
     // $.post("/api/analyze", retObj,submitted);
     $.post("/user/data", function(payload, s, x) {
         if (payload["status"] == "ERROR") {
             alert("Something went wrong!");
         } else {
+            currentData = payload;
             var topics = payload.data.total.context;
             console.log(topics);
             for (var i = 0; i < topics.length; i ++ ) {
@@ -161,9 +227,9 @@ function submit() {
             var neg = 0
             var pos = 0
 
-            
+
             console.log(overall);
-            
+
             var overall_result = "DEFAULT";
 
             if (overall < 0) {
@@ -179,14 +245,14 @@ function submit() {
 
 
             var stride = parseInt(payload.data.stride);
-            
+
 
             var tagCum = {};
             tag_list.forEach(function(item) {
 
                 tagCum[item] = 0;
             })
-            
+
             console.log(t_sentiment);
             Object.keys(t_sentiment).forEach(function(item) {
                 var sents = t_sentiment[item];
@@ -200,9 +266,9 @@ function submit() {
                 }*/
                 tag_list.forEach(function(tag) {
                     tagCum[tag] += 1;
-                    
+
                 })
-                
+
                 // total += stride
             });
             var max_sent = null;
@@ -219,7 +285,7 @@ function submit() {
             })
             var overall = pos - neg
             var polarity = 0
-            
+
 
             // set polarity
             $("#pol").html(polarity.toString() + "%")
@@ -229,14 +295,14 @@ function submit() {
             console.log(payload.data.stride)
 
 
-            
+
             rankMap = {}
             for (var i = 0; i < topics.length; i ++) {
 
                 rankMap[topics[i]] = topics.length - i;
             }
             var timeLineData = payload.data.timeline.context
-            
+
 
 
             var timeline_formatted_data = []
@@ -256,12 +322,12 @@ function submit() {
             }
             max = Math.max(max, 100);
             TimeKnots.draw("#timeline", timeline_formatted_data, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
-            
+
             //now timeline for sentiment
             var sentiment = payload.data.timeline.sentiment
             var sentiment_formatted = []
-            
-            
+
+
             var max = 0
             console.log(sentiment.length)
             console.log(sentiment);
@@ -269,7 +335,7 @@ function submit() {
             for (var i = 0; i < sentiment.length; i++) {
                 var current = sentiment[i];
                 var neg = 0
-                var pos = 0 
+                var pos = 0
                 Object.keys(current).forEach(function(item) {
                     var sents = current[item];
                     console.log(sents);
@@ -320,6 +386,6 @@ function submit() {
     });
 });
 
-  
+
 </script>
 </html>

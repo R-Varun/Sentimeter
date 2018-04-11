@@ -37,6 +37,12 @@ type="text/javascript">
     function goToHomePage() {
         document.location.href = '/'
     }
+    function goToLoginPage() {
+        document.location.href = 'login'
+    }
+    function goToMainPage() {
+        document.location.href = 'input'
+    }
 //]]>
 </script><!--Let browser know website is optimized for mobile-->
 <style>
@@ -57,31 +63,35 @@ hr.style6 {
   <input type="image" id="myimage" onclick="goToHomePage()" src=
   "/../img/Sentimeter_logo.jpg" style=
   "height:64px" />
+  <button type="button" style = "height:inherit; float: right; color: orange" id = "LogoutButton" onclick="goToLoginPage()">Logout</button>
 </div>
 </div>
+<div align = "center">
+    <button style = "height:inherit; color: orange" class = "inline" onclick="goToMainPage()">Go back to Main</button>
+    </div>
 
 <div class="container">
     <div class="card">
         <div class="card-content">
             <div class="row">
                     <span class="card-title col-s5">Results: Topics Discussed</span>
-                    
+
                     <div class="help-tip col-s1 offset-s6">
                         <p>The below list is sorted by relevance to the conversation</p>
                     </div>
             </div>
-                        
+
             <ul class="collection results">
             </ul>
         </div>
     </div>
-   
+
     <div align="center">
         <button type="button" id="exportButton" class="waves-light grey btn-large">
         Export Results to Excel</button>
     </div>
-    
-    
+
+
 
 
 </div>
@@ -97,7 +107,7 @@ hr.style6 {
 <script>
 $(document).ready(function() {
 
-   
+
 
   $.get("/submissions", function(payload, s, x) {
         console.log(payload);
@@ -105,9 +115,9 @@ $(document).ready(function() {
             $(".results").append(
                     `<li class="collection-item">${item["QUERYDATE"] + " : " + item["QUERYNAME"]} </li>`.toString()
                 );
-            
+
         })
-        
+
     });
 });
 

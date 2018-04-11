@@ -49,7 +49,7 @@ connection["execute"] = function() {
       connect.release();
     })
     // console.log(connect.execute);
-    connect.execute.apply(connect, argumentList)   
+    connect.execute.apply(connect, argumentList)
   })
 }
 
@@ -126,22 +126,22 @@ app.post('/api/analyze',async function (req, res) {
         });
     }
     );
-    
+
   }
-  
 
 
-  
+
+
   var ars =  [JSON.stringify(data)]
-  
+
   console.log(ars)
   PythonShell.run('python/main.py' , {mode:"json", args:ars, options:{pythonPath: "/usr/local/Cellar/python/3.6.5/bin/python3"}}, function (err, results) {
     if (err) {
-        
+
         console.log("PYTHON FAILED");
         res.send({status : "ERROR", message : "PYTHON SCRIPT FAILED"})
         throw err;
-        return        
+        return
     }
 
     var dataObj = {}
@@ -195,14 +195,14 @@ app.get("/submissions", function(req, res) {
     [user],
     function(err, results, fields) {
       if (err || results.length == 0) {
-        res.send({"status":"FAILURE", reason : "No Submissions" });        
-        return 
+        res.send({"status":"FAILURE", reason : "No Submissions" });
+        return
       }
       res.send({"status":"SUCCESS", data: results});
-      
+
     })
 
-  
+
 });
 
 app.get("/results.html", function(req, res) {
@@ -235,7 +235,7 @@ function hashPassword(pass, callback) {
     });
   });
 }
-// UTILS 
+// UTILS
 function checkCred(user, pass, callback) {
   if (typeof user === 'undefined' || typeof pass === 'undefined') {
     return callback({"valid": false, "reason": "Invalid Credentials"});
@@ -253,7 +253,7 @@ function checkCred(user, pass, callback) {
           console.log(err);
           return callback({"valid": false, "reason": "Invalid Credentials"});
         }
-        
+
         var newresult = {};
         console.log("res")
         console.log(res);
@@ -306,7 +306,7 @@ app.post('/login', function (req, res) {
   var pass = req.body.password;
   checkCred(user, pass, function(result) {
     if (result.valid) {
-      
+
       req.session["user"] = user;
       req.session["IsAdmin"] = result.IsAdmin;
       res.send({"status":"SUCCESS"});
@@ -357,5 +357,3 @@ app.post('/register', function(req, res) {
 
   })
 });
-
-
