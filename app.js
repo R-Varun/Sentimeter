@@ -119,7 +119,8 @@ app.post('/api/analyze',async function (req, res) {
   var ars =  [JSON.stringify(data)]
 
   console.log(ars)
-  PythonShell.run('python/main.py' , {mode:"json",pythonPath: PYTHONPATH, args:ars}, function (err, results) {
+  // pythonPath: PYTHONPATH, 
+  PythonShell.run('python/main.py' , {mode:"json",args:ars}, function (err, results) {
     if (err) {
 
         console.log("PYTHON FAILED");
@@ -161,30 +162,6 @@ app.post('/api/analyze',async function (req, res) {
     
     return;
   });
-
-  // utils.validateInput(data).then((ans) => {
-  //   console.log(ans);
-  //   // res.send(ans);
-  //   if (ans == false) {
-  //     res.send({status : "ERROR", message : "FORMAT INVALID"})
-  //     return;
-  //   } else {
-  //     PythonShell.run('test.py' , ["lol"], function (err, results) {
-  //       if (err) {
-  //           console.log(err);
-  //       }
-  //       // results is an array consisting of messages collected during execution
-  //       fileID = results[0];
-
-  //       // want to send a response of the link here
-
-  //       res.send(fileID);
-  //       return;
-  //       // res.send({"file":'/gifs/'+fileID + ".gif"})
-  //   });
-
-  //   }
-  // })
 });
 
 function error(err) {
