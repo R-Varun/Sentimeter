@@ -113,7 +113,7 @@ $(document).ready(function() {
         console.log(payload);
         payload.data.forEach(function(item) {
             $(".results").append(
-                    `<li class="collection-item">${item["QUERYDATE"] + " : " + item["QUERYNAME"]} </li>`.toString()
+                    `<li onclick="viewHist('${item["QUERYDATE"]}')" class="collection-item">${item["QUERYDATE"] + " : " + item["QUERYNAME"]} </li>`.toString()
                 );
 
         })
@@ -121,6 +121,16 @@ $(document).ready(function() {
     });
 });
 
+
+function viewHist(qd) {
+    console.log("clicked")
+    $.get('feature-history', {querydate: qd}, function(payload, s, x) {
+        console.log(payload);
+        window.location = "/feature-hist";
+    });
+        
+
+}
 </script>
 
 </html>
