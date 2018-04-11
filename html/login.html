@@ -146,6 +146,11 @@ $("#cpassword_register").keyup(function(event) {
         $("#register_btn").click();
     }
 });
+$("#password").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#login").click();
+    }
+});
 
 </script>
 </html>
