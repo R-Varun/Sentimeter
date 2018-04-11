@@ -46,9 +46,9 @@
         </div>
         <hr>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#home" data-toggle="tab"><i class="icon-user"></i> User Login</a>
+            <li class="active"><a href="#home" id ="loginTab" data-toggle="tab"><i class="icon-user"></i> User Login</a>
             </li>
-            <li><a href="#profile" data-toggle="tab"><i class="icon-pencil"></i> User Registration</a>
+            <li><a href="#profile" id = "registrationTab" data-toggle="tab"><i class="icon-pencil"></i> User Registration</a>
             </li>
         </ul>
         <div id="myTabContent" class="tab-content">
@@ -118,6 +118,7 @@ $("#login").click(function() {
 
 $("#register_btn").click(function() {
                 // confirm pass eq
+
                 var pass = $("#password_register").val();
                 var c_pass = $("#cpassword_register").val();
                 var email = $("#email_register").val();
@@ -129,6 +130,7 @@ $("#register_btn").click(function() {
                     {username: email, password: pass},
                     function(data, s, x) {
                         if (typeof data !== 'undefined') {
+                            $("#loginTab").click();
                             if (data.status == "SUCCESS") {
                                 alert("Registration success");
                                 // window.location = "/login";
@@ -139,6 +141,16 @@ $("#register_btn").click(function() {
                     }
                 )
             });
+$("#cpassword_register").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#register_btn").click();
+    }
+});
+$("#password").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#login").click();
+    }
+});
 
 </script>
 </html>

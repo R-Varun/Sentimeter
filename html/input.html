@@ -53,28 +53,26 @@ hr.style6 {
 </head>
 
 <body class=" grey lighten-3">
-<div class="navbar-fixed white">
-<div class="nav-wrapper">
-  <!-- <img src="https://cdn.dribbble.com/users/45642/screenshots/1231766/sentimeter_1x.png" alt="SentimeterLogo" style = "height:64px"> -->
-  <input class = "inline" type="image" id="myimage" onclick="goToHomePage()" src=
-  "/../img/Sentimeter_logo.jpg" style=
-  "height:64px" />
-  <button type="button" style = "height:inherit; float: right; color: orange" id = "LoginButton" onclick="goToLoginPage()">Logout</button>
-</div>
-</div>
-<div align = "center">
-    <button style = "height:inherit; color: orange" class = "inline" onclick="goToHistoryPage()">View Past Results</button>
+    <div class="navbar-fixed white">
+        <div class="nav-wrapper" id = "navBar">
+          <!-- <img src="https://cdn.dribbble.com/users/45642/screenshots/1231766/sentimeter_1x.png" alt="SentimeterLogo" style = "height:64px"> -->
+          <input class = "inline" type="image" id="myimage" onclick="goToHomePage()" src=
+          "/../img/Sentimeter_logo.jpg" style=
+          "height:64px" />
+        </div>
+        </div>
+<div align = "center" id = "pastResultsButtonDiv">
     </div>
 <textarea style ="width: 0px;min-width: 0px; min-height:0;padding:0!important; height: 0px; visibility:hidden" id = "corpusDisplayArea" class="materialize-textarea text-input"></textarea>
 <div class="container">
 <div class="step-1 card">
   <div class="card-content">
     <div class="row">
-                
+
     <span class="card-title">Step 1: Select Text to Analyze</span>
     </div>
       <div id="chooseText">
-        
+
         <div class="file-field input-field">
                 <div class="btn" >
                     <span>File</span>
@@ -83,7 +81,7 @@ hr.style6 {
                 <div class="file-path-wrapper" id="textin" >
                     <input class="file-path validate" placeholder="Upload text file you wish to analyze" type="text">
                 </div>
-                
+
         </div>
         <br>
         <h5 class="grey-text">OR</h5>
@@ -91,8 +89,10 @@ hr.style6 {
         <br>
         <div class="row">
           <textarea id = "fileDisplayArea" class="materialize-textarea text-input" rows="12" cols="150" placeholder="Paste Text to Analyze Here" >Speaker1: I went to the park</textarea>
-          
+
           <button data-target="optionsModal" class="btn modal-trigger">Options</button>
+          
+          <button onclick = "customize()" data-target="optionsModal" >testButton</button>
           <div id="optionsModal" class="modal">
             <div class="modal-content">
               <div class="input-field col s2">
@@ -103,7 +103,7 @@ hr.style6 {
                 <input value=":" id="speech_delimit" type="text">
                 <label class="active" for="speech_delimit">Speech Delimit</label>
             </div>
-            
+
             <div class="input-field col s2">
                 <input value="-1" id="gran_start" type="text">
                 <label class="active" for="gran_start">Starting</label>
@@ -112,7 +112,7 @@ hr.style6 {
                 <input value="-1" id="gran_end" type="text">
                 <label class="active" for="gran_start">Ending</label>
             </div>
-  
+
             <div class="input-field col s2">
               <input value="1" id="stride" type="text">
               <label class="active" for="stride">Stripe</label>
@@ -121,18 +121,18 @@ hr.style6 {
             </div>
             <div class="modal-footer">
               <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm Options</a>
-              
+
             </div>
           </div>
 
-          
-          
 
-          
+
+
+
         </div>
 
 
-      
+
       </div>
   </div>
   </div>
@@ -140,9 +140,9 @@ hr.style6 {
   <div class="step-2 card">
     <div class="card-content">
     <div class="row">
-                    
+
     <span class="card-title">Step 2: Select Language of Text</span>
-    </div>       
+    </div>
   <div id="chooseLanguage input-field">
     <select>
       <option value="English">
@@ -181,13 +181,13 @@ hr.style6 {
     <div class="card-content">
         <div class="row">
                 <span class="card-title col-s5">Step 3: Select Corpus</span>
-                
+
                 <div class="help-tip col-s1 offset-s6">
                     <p>A corpus is reference material we use to learn the sentiment of your text.
                       The corpus file should be a text file with data label pairs.</p>
                 </div>
         </div>
-                    
+
         <div class="file-field input-field">
                 <div class="btn" >
                     <span>File</span>
@@ -204,7 +204,7 @@ hr.style6 {
       <div class="row">
               <span class="card-title col-s5">Step 4: Name Your Results</span>
       </div>
-                  
+
       <div class="file-field input-field">
               <div class="file-path-wrapper" >
                   <input id = "resultsName" placeholder="Please input the desired name for your results" type="text">
@@ -230,9 +230,9 @@ $(document).ready(function() {
     $('select').material_select();
     $('.modal').modal();
 
-    
 
-    
+
+
   });
 
 window.onload = function() {
@@ -250,10 +250,10 @@ window.onload = function() {
 					fileDisplayArea.innerText = reader.result;
 				}
 
-				reader.readAsText(file);	
+				reader.readAsText(file);
 			}
     });
-    
+
     var corpusFileInput = document.getElementById('corpusFileInput');
     var corpusFileDisplayArea = document.getElementById('corpusDisplayArea');
 
@@ -268,13 +268,13 @@ window.onload = function() {
                 corpusFileDisplayArea.innerText = reader.result;
             }
 
-            reader.readAsText(file);	
+            reader.readAsText(file);
         } else {
             fileDisplayArea.innerText = "File not supported!";
         }
     });
 }
-    
+
 
   $("#processButton").click(function() {
     var spinHandle = loadingOverlay().activate();
@@ -288,6 +288,15 @@ window.onload = function() {
   }
      );
 
+function customize() {
+  $("#pastResultsButtonDiv").append(
+  '<button style = "height:inherit; color: orange" class = "inline" onclick="goToHistoryPage()">View Past Results</button>'
+  );
+  $("#navBar").append(
+  '<button type="button" style = "height:inherit; float: right; color: orange" id = "LoginButton" onclick="goToLoginPage()">Logout</button>'
+  );
+}
+
 function submit() {
 
   var text = $("#fileDisplayArea").val();
@@ -298,7 +307,7 @@ function submit() {
   var corpusText = corpusTextRaw.replace("\\t", "\t").replace("\\n", "\n")
   var sp_del = $("#speaker_delimit").val().replace("\\n","\n");
   var s_del = $("#speech_delimit").val()
-  
+
   var gran_start = parseInt($("#gran_start").val()) ;
   var gran_end = parseInt($("#gran_end").val()) ;
   var gran = [gran_start, gran_end];
@@ -306,7 +315,6 @@ function submit() {
 
   var stride = parseInt($("#stride").val()) ;
 
-  
   if (gran_start < 0 || gran_end < 0) {
     gran = [-1,-1];
   }

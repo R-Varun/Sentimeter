@@ -37,8 +37,23 @@ type="text/javascript">
     function goToHomePage() {
         document.location.href = '/'
     }
+    function goToHistoryPage() {
+        document.location.href = 'history'
+    }
+    function goToLoadingPage() {
+        document.location.href = 'loader.html'
+    }
+    function customize() {
+        $("#pastResultsButtonDiv").append(
+        '<button style = "height:inherit; color: orange" class = "inline" onclick="goToHistoryPage()">View Past Results</button>'
+        );
+        $("#navBar").append(
+        '<button type="button" style = "height:inherit; float: right; color: orange" id = "LoginButton" onclick="goToLoginPage()">Logout</button>'
+        );
+}
 
     function convertJSONToCSV(json) {
+        console.log(json);
         if(json == null) return null;
         var results
 
@@ -63,17 +78,16 @@ type="text/javascript">
             results += speakers[j];
 
             for (var key in sentiment[speakers[j]]) {
-
-                results += key;
                 results += columnDelimiter;
+                results += key;
+
             }
         }
 
-        return result;
+        return results;
     }
 
     function exportToExcel(filename, json) {
-        Console.log("reached");
         var csvFile;
         var downloadLink;
         var csv = convertJSONToCSV(json);
@@ -114,15 +128,16 @@ hr.style6 {
 </head>
 
 <body class=" grey lighten-3">
-<div class="navbar-fixed white">
-<div class="nav-wrapper">
-  <!-- <img src="https://cdn.dribbble.com/users/45642/screenshots/1231766/sentimeter_1x.png" alt="SentimeterLogo" style = "height:64px"> -->
-  <input type="image" id="myimage" onclick="goToHomePage()" src=
-  "/../img/Sentimeter_logo.jpg" style=
-  "height:64px" />
-</div>
-</div>
-
+        <div class="navbar-fixed white">
+            <div class="nav-wrapper" id = "navBar">
+              <!-- <img src="https://cdn.dribbble.com/users/45642/screenshots/1231766/sentimeter_1x.png" alt="SentimeterLogo" style = "height:64px"> -->
+              <input class = "inline" type="image" id="myimage" onclick="goToHomePage()" src=
+              "/../img/Sentimeter_logo.jpg" style=
+              "height:64px" />
+            </div>
+            </div>
+    <div align = "center" id = "pastResultsButtonDiv">
+        </div>
 <div class="container">
     <div class="card">
         <div class="card-content">
@@ -165,6 +180,7 @@ hr.style6 {
         <button type="button" id="exportButton" class="waves-light grey btn-large">
         Export Results to Excel</button>
     </div>
+    <button onclick = "customize()" data-target="optionsModal" >testButton</button>
 
 
 
@@ -187,19 +203,18 @@ $(document).ready(function() {
 
     $("#exportButton").click(function() {
     var spinHandle = loadingOverlay().activate();
-    setTimeout(function() {
     submit();
-    loadingOverlay().cancel(spinHandle);
-    }, 3000);
 
 
 
   }
      );
 
+
 function submit() {
-    Console.log("submit called");
-    exportToExcel(filename, currentData);
+    console.log("submit called");
+
+    exportToExcel("analysisResult.csv", currentData["data"]);
 }
 
     $('select').material_select();
