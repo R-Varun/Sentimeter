@@ -39,6 +39,7 @@ type="text/javascript">
     }
 
     function convertJSONToCSV(json) {
+        console.log(json);
         if(json == null) return null;
         var results
 
@@ -63,17 +64,16 @@ type="text/javascript">
             results += speakers[j];
 
             for (var key in sentiment[speakers[j]]) {
-
-                results += key;
                 results += columnDelimiter;
+                results += key;
+
             }
         }
 
-        return result;
+        return results;
     }
 
     function exportToExcel(filename, json) {
-        Console.log("reached");
         var csvFile;
         var downloadLink;
         var csv = convertJSONToCSV(json);
@@ -195,8 +195,9 @@ $(document).ready(function() {
      );
 
 function submit() {
-    Console.log("submit called");
-    exportToExcel(filename, currentData);
+    console.log("submit called");
+
+    exportToExcel("analysisResult.csv", currentData["data"]);
 }
 
     $('select').material_select();
