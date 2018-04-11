@@ -187,10 +187,7 @@ $(document).ready(function() {
 
     $("#exportButton").click(function() {
     var spinHandle = loadingOverlay().activate();
-    setTimeout(function() {
     submit();
-    loadingOverlay().cancel(spinHandle);
-    }, 3000);
 
 
 
