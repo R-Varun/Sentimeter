@@ -1,0 +1,404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+
+<title>Conversation Analysis</title><!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"
+type="text/css" /><!--Import jQuery before materialize.js-->
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js">
+</script><!-- Compiled and minified CSS -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"> -->
+<link type="text/css" rel="stylesheet" href="/css/main.css" />
+<link rel="stylesheet" href=
+"https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"
+type="text/css" /><!-- Compiled and minified JavaScript -->
+
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"
+type="text/javascript">
+</script>
+
+<script src="/timeknots/src/d3.v2.min.js" type="application/javascript"></script>
+<script src="/timeknots/src/timeknots.js" type="application/javascript"></script>
+<script src="../loadingOverlay.js"></script>
+
+
+
+<script type="text/javascript">
+//<![CDATA[
+    function goToLoadingPage() {
+        document.location.href = 'loader.html'
+    }
+    function goToHomePage() {
+        document.location.href = '/'
+    }
+
+    function convertJSONToCSV(json) {
+        if(json == null) return null;
+        var results
+
+        columnDelimiter = ',';
+        lineDelimiter = '\n';
+
+        topics = json["total"]["context"]
+        sentiment = json["total"]["sentiment"]
+
+        results = '';
+        results += 'topics';
+
+        for (var i = 0; i < topics.length; i ++ ) {
+            results += columnDelimiter;
+            results += topics[i];
+        }
+
+
+        var speakers = Object.keys(sentiment);
+        for (var j = 0; j < speakers.length; j ++ ) {
+            results += lineDelimiter;
+            results += speakers[j];
+
+            for (var key in sentiment[speakers[j]]) {
+
+                results += key;
+                results += columnDelimiter;
+            }
+        }
+
+        return result;
+    }
+
+    function exportToExcel(filename, json) {
+        Console.log("reached");
+        var csvFile;
+        var downloadLink;
+        var csv = convertJSONToCSV(json);
+        if (csv == null) csvFile = new Blob([''], {type: "text/csv"});
+        // CSV file
+        else csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link
+        downloadLink = document.createElement("a");
+
+        // File name
+        downloadLink.download = filename;
+
+        // Create a link to the file
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // Hide download link
+        downloadLink.style.display = "none";
+
+        // Add the link to DOM
+        document.body.appendChild(downloadLink);
+
+        // Click download link
+        downloadLink.click();
+    }
+
+//]]>
+</script><!--Let browser know website is optimized for mobile-->
+<style>
+
+hr.style6 {
+	background-color: #fff;
+	border-top: 2px dashed #8c8b8b;
+}
+
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body class=" grey lighten-3">
+<div class="navbar-fixed white">
+<div class="nav-wrapper">
+  <!-- <img src="https://cdn.dribbble.com/users/45642/screenshots/1231766/sentimeter_1x.png" alt="SentimeterLogo" style = "height:64px"> -->
+  <input type="image" id="myimage" onclick="goToHomePage()" src=
+  "/../img/Sentimeter_logo.jpg" style=
+  "height:64px" />
+</div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-content">
+            <div class="row">
+                    <span class="card-title col-s5">Results: Topics Discussed</span>
+
+                    <div class="help-tip col-s1 offset-s6">
+                        <p>The below list is sorted by relevance to the conversation</p>
+                    </div>
+            </div>
+
+            <ul class="collection results">
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-content">
+            <div class="row">
+                    <span class="card-title col-s5">Results: Sentiment</span>
+
+                    <p>Polarity:  <span id="pol"> </span> </p>
+                    <p>Overall: <span id="sent"> </span> </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card-panel">
+        <h1> Topics By Stride</h1>
+        <div id="timeline">
+        </div>
+        <h1> Sentiment By Stride</h1>
+        <div id="timeline_sentiment">
+        </div>
+
+
+    </div>
+    <div align="center">
+        <button type="button" id="exportButton" class="waves-light grey btn-large">
+        Export Results to Excel</button>
+    </div>
+
+
+
+
+</div>
+
+
+<div class="footer-copyright">
+<div class="container" align="bottom"></div>
+</div>
+
+</body>
+
+
+<script>
+
+var currentData;
+$(document).ready(function() {
+
+
+    $("#exportButton").click(function() {
+    var spinHandle = loadingOverlay().activate();
+    setTimeout(function() {
+    submit();
+    loadingOverlay().cancel(spinHandle);
+    }, 3000);
+
+
+
+  }
+     );
+
+function submit() {
+    Console.log("submit called");
+    exportToExcel(filename, currentData);
+}
+
+    $('select').material_select();
+    // $.post("/api/analyze", retObj,submitted);
+    var reqObj  = getJsonFromUrl();
+
+    $.post("/user/view_past", function(payload, s, x) {
+        console.log(payload)
+        if (payload["status"] == "ERROR") {
+            alert("Something went wrong!");
+        } else {
+            currentData = payload;
+            var topics = payload.data.total.context;
+            console.log(topics);
+            for (var i = 0; i < topics.length; i ++ ) {
+                $(".results").append(
+                    `<li class="collection-item">${i + 1 + ": " + topics[i]} </li>`.toString()
+                );
+            }
+
+            //load sentiment score
+            var t_sentiment = payload.data.total.sentiment;
+            //load tag list
+            var tag_list = payload.data.classes;
+            // console.log(topics);
+
+            var total = payload.data.len
+            var neg = 0
+            var pos = 0
+
+
+            console.log(overall);
+
+            var overall_result = "DEFAULT";
+
+            if (overall < 0) {
+                overall_result = "negative"
+            }
+            else if (overall > 0) {
+                overall_result = "positive"
+            }
+            else {
+                overall_result = "neutral"
+            }
+
+
+
+            var stride = parseInt(payload.data.stride);
+
+
+            var tagCum = {};
+            tag_list.forEach(function(item) {
+
+                tagCum[item] = 0;
+            })
+
+            console.log(t_sentiment);
+            Object.keys(t_sentiment).forEach(function(item) {
+                var sents = t_sentiment[item];
+                console.log(sents);
+                /*
+                if ('negative' in sents) {
+                    neg += parseInt(sents['negative'])
+                }
+                if ('positive' in sents) {
+                    pos += parseInt(sents['positive'])
+                }*/
+                tag_list.forEach(function(tag) {
+                    tagCum[tag] += 1;
+
+                })
+
+                // total += stride
+            });
+            var max_sent = null;
+            var max_sent_val = 0;
+            tag_list.forEach(function(tag) {
+                if (max_sent == null) {
+                    max_sent = tag;
+                    max_sent_val = tagCum[tag]
+
+                } else if (max_sent_val < tagCum[tag]) {
+                    max_sent = tag;
+                    max_sent_val = tagCum[tag]
+                }
+            })
+            var overall = pos - neg
+            var polarity = 0
+
+
+            // set polarity
+            $("#pol").html(polarity.toString() + "%")
+            // set overall
+            $("#sent").html(max_sent);
+            console.log("STRIDE")
+            console.log(payload.data.stride)
+
+
+
+            rankMap = {}
+            for (var i = 0; i < topics.length; i ++) {
+
+                rankMap[topics[i]] = topics.length - i;
+            }
+            var timeLineData = payload.data.timeline.context
+
+
+
+            var timeline_formatted_data = []
+            var max = 0
+            var inc = 500 / timeLineData.length
+            for (var i = 0; i < timeLineData.length; i++) {
+                var fn = "None"
+                if (timeLineData.length > 0) {
+                    fn = "";
+                }
+                for (var t = 0; t < timeLineData[i].length; t++) {
+                    fn += timeLineData[i][t] + "<br>";
+                }
+
+                timeline_formatted_data.push({value: i*inc+ 1, "name": fn})
+                max = i*inc + 1;
+            }
+            max = Math.max(max, 100);
+            TimeKnots.draw("#timeline", timeline_formatted_data, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
+
+            //now timeline for sentiment
+            var sentiment = payload.data.timeline.sentiment
+            var sentiment_formatted = []
+
+
+            var max = 0
+            console.log(sentiment.length)
+            console.log(sentiment);
+            var inc = 500 / sentiment.length
+            for (var i = 0; i < sentiment.length; i++) {
+                var current = sentiment[i];
+                var neg = 0
+                var pos = 0
+                Object.keys(current).forEach(function(item) {
+                    var sents = current[item];
+                    console.log(sents);
+                    if ('negative' in sents) {
+                        neg += parseInt(sents['negative'])
+                    }
+                    if ('positive' in sents) {
+                        pos += parseInt(sents['positive'])
+                    }
+
+                })
+
+                var overall = pos - neg;
+                console.log(overall);
+                var overall_result = "";
+                if (overall < 0) {
+                    overall_result = "negative"
+                }
+                else if (overall > 0) {
+                    overall_result = "positive"
+                }
+                else {
+                    overall_result = "neutral"
+                }
+                var col = "";
+                if (overall < 0) {
+                    col = "red"
+                }
+                else if (overall > 0) {
+                    col = "green"
+                }
+                else {
+                    col = "gray"
+                }
+                var rad = Math.abs(overall);
+                if (overall == 0) {
+                    rad = 1
+                }
+                console.log(rad)
+                sentiment_formatted.push({value: i*inc+ 1, "name":overall_result, color:col, radius:rad* 10})
+                max = i*inc + 1;
+            }
+            max = Math.max(max, 100);
+            console.log(sentiment_formatted);
+            TimeKnots.draw("#timeline_sentiment", sentiment_formatted, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
+        }
+
+    });
+});
+
+function getJsonFromUrl() {
+  var query = location.search.substr(1);
+  var result = {};
+  query.split("&").forEach(function(part) {
+    var item = part.split("=");
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+}
+
+
+</script>
+</html>
