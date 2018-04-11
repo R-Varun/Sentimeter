@@ -56,14 +56,15 @@ hr.style6 {
 <div class="navbar-fixed white">
 <div class="nav-wrapper">
   <!-- <img src="https://cdn.dribbble.com/users/45642/screenshots/1231766/sentimeter_1x.png" alt="SentimeterLogo" style = "height:64px"> -->
-  <input type="image" id="myimage" onclick="goToHomePage()" src=
+  <input class = "inline" type="image" id="myimage" onclick="goToHomePage()" src=
   "/../img/Sentimeter_logo.jpg" style=
   "height:64px" />
-  <a onclick="goToHistoryPage()">View Past Results</a>
-  
   <button type="button" style = "height:inherit; float: right; color: orange" id = "LoginButton" onclick="goToLoginPage()">Logout</button>
 </div>
 </div>
+<div align = "center">
+    <button style = "height:inherit; color: orange" class = "inline" onclick="goToHistoryPage()">View Past Results</button>
+    </div>
 <textarea style ="width: 0px;min-width: 0px; min-height:0;padding:0!important; height: 0px; visibility:hidden" id = "corpusDisplayArea" class="materialize-textarea text-input"></textarea>
 <div class="container">
 <div class="step-1 card">
@@ -182,7 +183,8 @@ hr.style6 {
                 <span class="card-title col-s5">Step 3: Select Corpus</span>
                 
                 <div class="help-tip col-s1 offset-s6">
-                    <p>A corpus is reference material we use to learn the sentiment of your test</p>
+                    <p>A corpus is reference material we use to learn the sentiment of your text.
+                      The corpus file should be a text file with data label pairs.</p>
                 </div>
         </div>
                     
@@ -249,8 +251,6 @@ window.onload = function() {
 				}
 
 				reader.readAsText(file);	
-			} else {
-				fileDisplayArea.innerText = "File not supported!";
 			}
     });
     
