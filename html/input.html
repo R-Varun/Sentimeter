@@ -92,7 +92,6 @@ hr.style6 {
 
           <button data-target="optionsModal" class="btn modal-trigger">Options</button>
           
-          <button onclick = "customize()" data-target="optionsModal" >testButton</button>
           <div id="optionsModal" class="modal">
             <div class="modal-content">
               <div class="input-field col s2">
@@ -229,7 +228,7 @@ Process</button>
 $(document).ready(function() {
     $('select').material_select();
     $('.modal').modal();
-
+    customize();
 
 
 
@@ -289,12 +288,28 @@ window.onload = function() {
      );
 
 function customize() {
-  $("#pastResultsButtonDiv").append(
-  '<button style = "height:inherit; color: orange" class = "inline" onclick="goToHistoryPage()">View Past Results</button>'
+  $.post("/auth", function(data, s, x) {
+    console.log(data);
+    if (data.data == true) {
+      $("#pastResultsButtonDiv").append(
+      );
+      $("#navBar").append(
+      `<ul class="right">
+          <button style="margin-right:1rem;" type="button" class="btn waves-effect waves-light orange"  onclick="goToHistoryPage()">View Past Results</button>
+
+          <button style="margin-right:1rem;" type="button" class="btn waves-effect waves-light orange" id = "LoginButton" onclick="goToLoginPage()"> Logout</button>
+      </ul>`.toString()
   );
-  $("#navBar").append(
-  '<button type="button" style = "height:inherit; float: right; color: orange" id = "LoginButton" onclick="goToLoginPage()">Logout</button>'
+    } else {
+      $("#navBar").append(
+      `<ul class="right">
+          <button style="margin-right:1rem;" type="button" class="btn waves-effect waves-light orange" id = "LoginButton" onclick="goToLoginPage()"> Logout</button>
+      </ul>`.toString()
   );
+    }
+
+  })
+  
 }
 
 function submit() {

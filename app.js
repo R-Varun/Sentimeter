@@ -381,4 +381,13 @@ app.post('/register', function(req, res) {
 });
 
 
+app.post("/auth", function(req, res) {
+  var user = req.session.user;
+  if (typeof user === 'undefined') {
+    res.send({"status" : "FAILURE", "reason" : "Not Signed In", "data" : false});
+  } else {
+    res.send({"status" : "SUCCESS", "data": true});
+  }
+});
+
 
