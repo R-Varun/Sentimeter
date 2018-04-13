@@ -132,7 +132,6 @@ $("#register_btn").click(function() {
                         if (typeof data !== 'undefined') {
                             $("#loginTab").click();
                             if (data.status == "SUCCESS") {
-                                alert("Registration success");
                                 // window.location = "/login";
                             } else {
                                 alert(data.reason);
