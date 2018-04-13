@@ -2,7 +2,7 @@
   "engines": {
     "node": ">=5.7.1"
   },
-  "name": "hackgt4-2",
+  "name": "Sentimeter",
   "version": "1.0.0",
   "description": "mad hacks 2.0",
   "main": "app.js",

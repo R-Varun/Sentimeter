@@ -63,12 +63,8 @@ hr.style6 {
   <input type="image" id="myimage" onclick="goToHomePage()" src=
   "/../img/Sentimeter_logo.jpg" style=
   "height:64px" />
-  <button type="button" style = "height:inherit; float: right; color: orange" id = "LogoutButton" onclick="goToLoginPage()">Logout</button>
 </div>
 </div>
-<div align = "center">
-    <button style = "height:inherit; color: orange" class = "inline" onclick="goToMainPage()">Go back to Main</button>
-    </div>
 
 <div class="container">
     <div class="card">
@@ -107,13 +103,13 @@ hr.style6 {
 <script>
 $(document).ready(function() {
 
-
+customize();    
 
   $.get("/submissions", function(payload, s, x) {
         console.log(payload);
         payload.data.forEach(function(item) {
             $(".results").append(
-                    `<li class="collection-item">${item["QUERYDATE"] + " : " + item["QUERYNAME"]} </li>`.toString()
+                    `<li onclick="viewHist('${item["QUERYDATE"]}')" class="collection-item">${item["QUERYDATE"] + " : " + item["QUERYNAME"]} </li>`.toString()
                 );
 
         })
@@ -121,6 +117,33 @@ $(document).ready(function() {
     });
 });
 
+function customize() {
+  $.post("/auth", function(data, s, x) {
+    console.log(data);
+    if (data.data == true) {
+      $(".nav-wrapper").append(
+      `<ul class="right">
+          <button style="margin-right:1rem;" type="button" class="btn waves-effect waves-light orange"  onclick="goToMainPage()" >Back to Main</button>
+
+          <button style="margin-right:1rem;" type="button" class="btn waves-effect waves-light orange" id = "LoginButton" onclick="goToLoginPage()"> Logout</button>
+      </ul>`.toString()
+  );
+    }
+
+  })
+  
+}
+
+
+function viewHist(qd) {
+    console.log("clicked")
+    $.get('feature-history', {querydate: qd}, function(payload, s, x) {
+        console.log(payload);
+        window.location = "/feature-hist";
+    });
+        
+
+}
 </script>
 
 </html>

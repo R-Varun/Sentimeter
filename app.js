@@ -91,6 +91,16 @@ app.post("/user/data", async function(req, res) {
 
 });
 
+app.post("/user/view_past", async function(req, res) {
+  if (typeof req.session["feature-history"] === 'undefined') {
+    res.send({status : "ERROR", message : "NO DATA AVAILABLE"});
+  } else {
+    res.send({status : "SUCCESS", data: req.session["feature-history"]});
+  }
+
+});
+
+
 app.post('/api/analyze',async function (req, res) {
   var data = req.body;
   // validate input for analyze bloc
@@ -98,44 +108,19 @@ app.post('/api/analyze',async function (req, res) {
 
 
   var valid = await utils.validateInput(data)
-  // if (!valid) {
-  //   res.send({status : "ERROR", message : "FORMAT INVALID"})
-  //   return;
-  // }
-
-  // data["corpus"] = "";
   var query = data.resultsName;
   var username = req.session["user"];
   var datetime = moment.utc().format();
   console.log(datetime);
-  if (username) {
-
-    connection.execute("SET FOREIGN_KEY_CHECKS=0",
-    [],
-    function(err, results, fields) {
-      connection.execute(
-        //passed all fields, start putting into database wtih User table first
-        "insert into submission (Queryname, Username, Querydate) values (?, ?, ?)",
-        [query, username, datetime],
-        function(err, results, fields) {
-            if (err) {
-              console.log(err);
-              return;
-            }
-            console.log("SUBMISSION ADDED");
-        });
-    }
-    );
-
-  }
-
+  
 
 
 
   var ars =  [JSON.stringify(data)]
 
   console.log(ars)
-  PythonShell.run('python/main.py' , {mode:"json", args:ars, options:{pythonPath: "/usr/local/Cellar/python/3.6.5/bin/python3"}}, function (err, results) {
+  // pythonPath: PYTHONPATH, 
+  PythonShell.run('python/main.py' , {mode:"json",args:ars}, function (err, results) {
     if (err) {
 
         console.log("PYTHON FAILED");
@@ -152,32 +137,31 @@ app.post('/api/analyze',async function (req, res) {
 
     console.log(results);
     res.send(results);
+
+    if (username) {
+
+      connection.execute("SET FOREIGN_KEY_CHECKS=0",
+      [],
+      function(err, result, fields) {
+        connection.execute(
+          //passed all fields, start putting into database wtih User table first
+          "insert into submission (Queryname, Username, Querydate, Data) values (?, ?, ?, ?)",
+          [query, username, datetime, JSON.stringify(results)],
+          function(err, result, fields) {
+              if (err) {
+                console.log(err);
+                return;
+              }
+              console.log("SUBMISSION ADDED");
+          });
+      }
+      );
+  
+    }
+
+    
     return;
   });
-
-  // utils.validateInput(data).then((ans) => {
-  //   console.log(ans);
-  //   // res.send(ans);
-  //   if (ans == false) {
-  //     res.send({status : "ERROR", message : "FORMAT INVALID"})
-  //     return;
-  //   } else {
-  //     PythonShell.run('test.py' , ["lol"], function (err, results) {
-  //       if (err) {
-  //           console.log(err);
-  //       }
-  //       // results is an array consisting of messages collected during execution
-  //       fileID = results[0];
-
-  //       // want to send a response of the link here
-
-  //       res.send(fileID);
-  //       return;
-  //       // res.send({"file":'/gifs/'+fileID + ".gif"})
-  //   });
-
-  //   }
-  // })
 });
 
 function error(err) {
@@ -204,6 +188,44 @@ app.get("/submissions", function(req, res) {
 
 
 });
+
+
+app.get('/feature-history', function(req, res) {
+  var user = req.session["user"];
+  if (typeof user === 'undefined') {
+    res.send({"status":"FAILURE", reason : "No User Logged In" });
+    return;
+  }
+
+  var qd = req.query.querydate;
+  qd = moment(qd).format().toString();
+  if (typeof qd === 'undefined') {
+    res.send({"status":"FAILURE", reason : "No Query Date Specified" });
+    return;
+  }
+  connection.execute(
+    //passed all fields, start putting into database wtih User table first
+    "select * from submission where username = ? AND querydate = ?",
+    [user, qd],
+    function(err, results, fields) {
+        if (err) {
+          res.send({"status" : "FAILURE", "reason" : "Error in inserting into Users"});
+          deleteUser(user);
+          return;
+        }
+        console.log(results);
+        req.session["feature-history"] = JSON.parse(results[0].DATA)[0];
+        res.send({"status" : "SUCCESS"});
+
+    });
+  
+  
+  
+
+});
+app.get("/feature-hist", function(req, res) {
+  res.sendFile('html/feature-history.html' , { root : __dirname});
+}) 
 
 app.get("/results.html", function(req, res) {
   res.sendFile('html/results.html' , { root : __dirname});
@@ -357,3 +379,15 @@ app.post('/register', function(req, res) {
 
   })
 });
+
+
+app.post("/auth", function(req, res) {
+  var user = req.session.user;
+  if (typeof user === 'undefined') {
+    res.send({"status" : "FAILURE", "reason" : "Not Signed In", "data" : false});
+  } else {
+    res.send({"status" : "SUCCESS", "data": true});
+  }
+});
+
+
