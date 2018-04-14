@@ -226,7 +226,7 @@ function submit() {
             currentData = payload;
             var topics = payload.data.total.context;
             console.log(topics);
-            for (var i = 0; i < topics.length; i ++ ) {
+            for (var i = 0; i < Math.min(topics.length, 10); i ++ ) {
                 $(".results").append(
                     `<li class="collection-item">${i + 1 + ": " + topics[i]} </li>`.toString()
                 );
@@ -239,25 +239,7 @@ function submit() {
             // console.log(topics);
 
             var total = payload.data.len
-            var neg = 0
-            var pos = 0
-
-
-            console.log(overall);
-
-            var overall_result = "DEFAULT";
-
-            if (overall < 0) {
-                overall_result = "negative"
-            }
-            else if (overall > 0) {
-                overall_result = "positive"
-            }
-            else {
-                overall_result = "neutral"
-            }
-
-
+            
 
             var stride = parseInt(payload.data.stride);
 
@@ -272,19 +254,10 @@ function submit() {
             Object.keys(t_sentiment).forEach(function(item) {
                 var sents = t_sentiment[item];
                 console.log(sents);
-                /*
-                if ('negative' in sents) {
-                    neg += parseInt(sents['negative'])
-                }
-                if ('positive' in sents) {
-                    pos += parseInt(sents['positive'])
-                }*/
                 tag_list.forEach(function(tag) {
                     tagCum[tag] += 1;
 
                 })
-
-                // total += stride
             });
             var max_sent = null;
             var max_sent_val = 0;
@@ -298,7 +271,6 @@ function submit() {
                     max_sent_val = tagCum[tag]
                 }
             })
-            var overall = pos - neg
             var polarity = 0
 
 
@@ -306,23 +278,20 @@ function submit() {
             $("#pol").html(polarity.toString() + "%")
             // set overall
             $("#sent").html(max_sent);
-            console.log("STRIDE")
-            console.log(payload.data.stride)
+            console.log(payload.data)
 
 
 
             rankMap = {}
             for (var i = 0; i < topics.length; i ++) {
-
                 rankMap[topics[i]] = topics.length - i;
             }
             var timeLineData = payload.data.timeline.context
 
-
-
             var timeline_formatted_data = []
             var max = 0
             var inc = 500 / timeLineData.length
+            // ADD IN NAMES WITHIN EACH TIMEKNOT
             for (var i = 0; i < timeLineData.length; i++) {
                 var fn = "None"
                 if (timeLineData.length > 0) {
@@ -336,7 +305,7 @@ function submit() {
                 max = i*inc + 1;
             }
             max = Math.max(max, 100);
-            TimeKnots.draw("#timeline", timeline_formatted_data, {dateDimension:false, color: "teal", width:max, showLabels: false, labelFormat: ""});
+            TimeKnots.draw("#timeline", timeline_formatted_data, {dateDimension:false, color: "Orange", width:max, showLabels: false, labelFormat: ""});
 
             //now timeline for sentiment
             var sentiment = payload.data.timeline.sentiment
@@ -344,52 +313,54 @@ function submit() {
 
 
             var max = 0
+
+            var classes = payload.data.classes;
+            var classColors = {};
+            for (var j = 0; j < classes.length; j++) {
+                classColors[classes[j]] = getRandomColor();
+            }
             console.log(sentiment.length)
             console.log(sentiment);
             var inc = 500 / sentiment.length
+
+            
+
             for (var i = 0; i < sentiment.length; i++) {
+                var classRank = {};
+                for (var j = 0; j < classes.length; j++) {
+                    classRank[classes[j]] = 0;
+                }
+                
                 var current = sentiment[i];
-                var neg = 0
-                var pos = 0
                 Object.keys(current).forEach(function(item) {
                     var sents = current[item];
-                    console.log(sents);
-                    if ('negative' in sents) {
-                        neg += parseInt(sents['negative'])
-                    }
-                    if ('positive' in sents) {
-                        pos += parseInt(sents['positive'])
-                    }
+                    classes.forEach(function(cur_class) {
+                        if (cur_class in sents) {
+                            classRank[cur_class] += sents[cur_class]
+                        }
+                    });
+                });
+                // FIND MAX CLASS IN THIS STRIDE
+                // COlOR AND SIZE KNOT ACCORDINGLY
 
+                var maxClass = classes[0]
+                var maxClassVal = classRank[maxClass];
+
+                Object.keys(classRank).forEach(function(cur_class) {
+                    if (classRank[cur_class] > maxClassVal) {
+                        maxClassVal = classRank[cur_class]
+                        maxClass = cur_class
+                    }
                 })
 
-                var overall = pos - neg;
-                console.log(overall);
-                var overall_result = "";
-                if (overall < 0) {
-                    overall_result = "negative"
-                }
-                else if (overall > 0) {
-                    overall_result = "positive"
-                }
-                else {
-                    overall_result = "neutral"
-                }
-                var col = "";
-                if (overall < 0) {
-                    col = "red"
-                }
-                else if (overall > 0) {
-                    col = "green"
-                }
-                else {
-                    col = "gray"
-                }
-                var rad = Math.abs(overall);
-                if (overall == 0) {
+                var overall_result = maxClass
+                
+                var col = classColors[maxClass]
+                var rad = Math.abs(maxClassVal);
+                if (maxClassVal == 0) {
                     rad = 1
                 }
-                console.log(rad)
+                // console.log(rad)
                 sentiment_formatted.push({value: i*inc+ 1, "name":overall_result, color:col, radius:rad* 10})
                 max = i*inc + 1;
             }
@@ -401,6 +372,14 @@ function submit() {
     });
 });
 
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
 </script>
 </html>

@@ -108,9 +108,12 @@ customize();
   $.get("/submissions", function(payload, s, x) {
         console.log(payload);
         payload.data.forEach(function(item) {
+            var formattedDate = new Date(item["QUERYDATE"]); 
+            formattedDate = formattedDate.toDateString() + " - "  + formattedDate.toLocaleTimeString();   
+
             $(".results").append(
-                    `<li onclick="viewHist('${item["QUERYDATE"]}')" class="collection-item">${item["QUERYDATE"] + " : " + item["QUERYNAME"]} </li>`.toString()
-                );
+                `<li onclick="viewHist('${item["QUERYDATE"]}')" class="collection-item">${"<b>" +  formattedDate + "</b> : " + item["QUERYNAME"]} </li>`.toString()
+            );
 
         })
 
