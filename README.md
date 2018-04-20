@@ -1,7 +1,7 @@
 # Junior Design Team 7318
 
 ## What's here
-- Front End work for Sentimeter web application
+- Our full application for Sentimeter (Excluding Database Services)
 
 ## What you need to get started
 - NodeJS 8 or higher
