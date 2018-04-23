@@ -26,6 +26,7 @@ type="text/javascript">
 <script src="/timeknots/src/d3.v2.min.js" type="application/javascript"></script>
 <script src="/timeknots/src/timeknots.js" type="application/javascript"></script>
 <script src="../loadingOverlay.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 
 
@@ -53,7 +54,6 @@ type="text/javascript">
 }
 
     function convertJSONToCSV(json) {
-        console.log(json);
         if(json == null) return null;
         var results
 
@@ -176,11 +176,28 @@ hr.style6 {
 
 
     </div>
+    <div class="card-panel">
+        <h1> Sentiment by Speaker</h1>
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="speaker_list">
+                  
+                </select>
+                <label>Choose Speaker</label>
+            </div>
+        </div>
+        
+        <div id="by_speaker">
+        </div>
+        
+
+
+    </div>
+
     <div align="center">
         <button type="button" id="exportButton" class="waves-light grey btn-large">
         Export Results to Excel</button>
     </div>
-    <button onclick = "customize()" data-target="optionsModal" >testButton</button>
 
 
 
@@ -196,9 +213,13 @@ hr.style6 {
 
 
 <script>
+// GLOBAL FOR CHART 
+var speaker_data = null;
 
 var currentData;
 $(document).ready(function() {
+    google.charts.load('current', {'packages':['corechart']});
+
 
 
     $("#exportButton").click(function() {
@@ -212,7 +233,6 @@ $(document).ready(function() {
 
 
 function submit() {
-    console.log("submit called");
 
     exportToExcel("analysisResult.csv", currentData["data"]);
 }
@@ -223,9 +243,26 @@ function submit() {
         if (payload["status"] == "ERROR") {
             alert("Something went wrong!");
         } else {
+
+            // CHARTS
+            speaker_data = payload.data.total.sentiment;
+            console.log("1")
+            console.log(speaker_data)
+            var speaker_list = Object.keys(payload.data.total.sentiment);
+
+            
+            speaker_list.forEach(function(item) {
+                $("#speaker_list").append(`<option value="${item}">${item}</option>`);
+                $('select').material_select();
+            });
+            google.charts.setOnLoadCallback(function() {
+                var firstObj = Object.keys(payload.data.total.sentiment)[0];
+                drawChart(payload.data.total.sentiment[firstObj]);
+            });
+            // END CHARTS
+
             currentData = payload;
             var topics = payload.data.total.context;
-            console.log(topics);
             for (var i = 0; i < Math.min(topics.length, 10); i ++ ) {
                 $(".results").append(
                     `<li class="collection-item">${i + 1 + ": " + topics[i]} </li>`.toString()
@@ -236,7 +273,6 @@ function submit() {
             var t_sentiment = payload.data.total.sentiment;
             //load tag list
             var tag_list = payload.data.classes;
-            // console.log(topics);
 
             var total = payload.data.len
             
@@ -253,7 +289,6 @@ function submit() {
             console.log(t_sentiment);
             Object.keys(t_sentiment).forEach(function(item) {
                 var sents = t_sentiment[item];
-                console.log(sents);
                 tag_list.forEach(function(tag) {
                     tagCum[tag] += 1;
 
@@ -278,7 +313,6 @@ function submit() {
             $("#pol").html(polarity.toString() + "%")
             // set overall
             $("#sent").html(max_sent);
-            console.log(payload.data)
 
 
 
@@ -372,6 +406,10 @@ function submit() {
     });
 });
 
+$("#speaker_list").change(function() {
+    drawChart(speaker_data[$("#speaker_list").val()])
+});
+
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
   var color = '#';
@@ -381,5 +419,25 @@ function getRandomColor() {
   return color;
 }
 
+
+
+
+function drawChart(user) {
+    var userData = [["TASK", "Sentiments in Session"]];
+    Object.keys(user).forEach(function(item) {
+        console.log(item);
+        userData.push([item, user[item]]);
+    })
+    
+    var data = google.visualization.arrayToDataTable(userData);
+
+    var options = {
+    title: 'Sentiment',
+    is3D: true
+    };
+    var chart = new google.visualization.PieChart(document.getElementById("by_speaker"));
+    chart.draw(data, options);
+}
 </script>
+
 </html>

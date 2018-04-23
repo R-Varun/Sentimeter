@@ -3,3 +3,4 @@ python/.ide
 node_modules/
 *.idea
 python/.idea
+config.js

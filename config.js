@@ -9,7 +9,12 @@ var config = {
     "LUIS_URL" : "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/973b73d8-4a37-4dad-b654-e77f4508965a?subscription-key=b2aaa7ea8f88473da8640a41e9ae458c&verbose=true&timezoneOffset=0&q=",
     "TONE_USER" : "08ad8604-f604-4a4b-8524-cad9d57232fb",
     "TONE_PASS" : "71181huuy74X",
-    "TONE_URL" : "https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone?version=2017-09-21"
+    "TONE_URL" : "https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone?version=2017-09-21",
+        
+    host: 'us-cdbr-iron-east-05.cleardb.net',
+    user: 'bb47e512244cef',
+    password: '50ac0669',
+    database: 'heroku_e79dfa0cbc081a3'
 }
 module.exports = config;
 

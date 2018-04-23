@@ -22,12 +22,13 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10;
 const moment = require("moment");
 
+const CUSTOM_PYTHON_PATH = true;
 const PYTHONPATH = '/usr/local/opt/python3/bin/python3.6'
 var pool  = mysql.createPool({
-  host: 'us-cdbr-iron-east-05.cleardb.net',
-  user: 'bb47e512244cef',
-  password: '50ac0669',
-  database: 'heroku_e79dfa0cbc081a3'
+  host: config.host,
+  user: config.user,
+  password: config.password,
+  database: config.database
 });
 
 var getConnection = function(callback) {
@@ -126,7 +127,12 @@ app.post('/api/analyze',async function (req, res) {
 
   console.log(ars)
   // pythonPath: PYTHONPATH, 
-  PythonShell.run('python/main.py' , {mode:"json",args:ars}, function (err, results) {
+  var options = {mode:"json",args:ars}
+
+  if (CUSTOM_PYTHON_PATH) {
+    options["pythonPath"] = PYTHONPATH;
+  }
+  PythonShell.run('python/main.py' , options, function (err, results) {
     if (err) {
 
         console.log("PYTHON FAILED");
