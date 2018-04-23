@@ -22,7 +22,7 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10;
 const moment = require("moment");
 
-const CUSTOM_PYTHON_PATH = true;
+const CUSTOM_PYTHON_PATH = false;
 const PYTHONPATH = '/usr/local/opt/python3/bin/python3.6'
 var pool  = mysql.createPool({
   host: config.host,
