@@ -10,9 +10,7 @@
         <!-- Compiled and minified JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
         <script type = "text/javascript">
-         function goToInputPage() {
-            document.location.href = 'input'
-         }
+         
          function goToHomePage() {
             document.location.href = '/'
         }
@@ -62,7 +60,7 @@
                             <input type="text" id="username" class="span6" name="username" placeholder="User ID">
                             <input type="password" id="password" class="span6" name="password" placeholder="Password">
                             <hr>
-                            <button type="button" id="login" onclick = "goToInputPage()" name="submit" class="btn btn-info btn-block">Sign in</button>
+                            <button type="button" id="login" name="submit" class="btn btn-info btn-block">Sign in</button>
                         </form>
                     </div>
                 </div>
@@ -106,7 +104,9 @@ $("#login").click(function() {
             if (data.status === "SUCCESS") {
                 // window.location = "/session";
                 console.log("LOG IN SUCCESS")
+                document.location.href = 'input'
 
+                
             } else {
                 console.log(data.reason);
                 console.log("LOG IN FAILED")
@@ -129,10 +129,17 @@ $("#register_btn").click(function() {
                 $.post("/register",
                     {username: email, password: pass},
                     function(data, s, x) {
+                        console.log(data);
                         if (typeof data !== 'undefined') {
                             $("#loginTab").click();
                             if (data.status == "SUCCESS") {
+<<<<<<< HEAD
                                 // window.location = "/login";
+=======
+                                alert("Registration success");
+                                // document.location.href = 'input'
+
+>>>>>>> 9b33a428f0ed06dd904ac382fcd92d0c506efc2b
                             } else {
                                 alert(data.reason);
                             }

@@ -71,7 +71,13 @@ app.use(express.static('public'))
 // var redis = require('redis');
 
 app.get("/", function(req, res) {
+  if (typeof req.session.user !== 'undefined') {
+    res.sendFile('html/input.html' , { root : __dirname});
+
+  } else {
     res.sendFile('html/index.html' , { root : __dirname});
+  }
+    
 });
 app.get("/input", function(req, res) {
   res.sendFile('html/input.html' , { root : __dirname});
