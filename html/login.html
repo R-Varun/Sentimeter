@@ -133,9 +133,13 @@ $("#register_btn").click(function() {
                         if (typeof data !== 'undefined') {
                             $("#loginTab").click();
                             if (data.status == "SUCCESS") {
+<<<<<<< HEAD
+                                // window.location = "/login";
+=======
                                 alert("Registration success");
                                 // document.location.href = 'input'
 
+>>>>>>> 9b33a428f0ed06dd904ac382fcd92d0c506efc2b
                             } else {
                                 alert(data.reason);
                             }
