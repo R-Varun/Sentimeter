@@ -100,11 +100,6 @@ h1 {
     font-size: 24px !important;
     font-weight: 300 !important;
 }
-
-body {
-    padding-top: 20px;
-    padding-bottom: 40px;
-}
 /* Custom container */
 .container-narrow {
     margin: 0 auto;
