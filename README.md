@@ -1,18 +1,23 @@
 # Junior Design Team 7318
 
-## What's here
-- Our full application for Sentimeter (Excluding Database Services)
+# Release Notes (Ver. 1.0)
 
-## What you need to get started
-- NodeJS 8 or higher
+## New Features 
+- Added ability to name user results
+- Added ability to show sentiment by speaker 
+- Added ability to fully view past results if user is logged in
 
-## How to get started
-- clone repository
-- go to repository root directory and run `npm install`
-- run node app.js
+## Bug Fixes
+- Modified sentiment by stripe to be easier to read and more visually appealing
 
+## Known Defects
+- Spinner sometimes does not spin long enough to process results on input page
+- Selecting a language other than English will still analyze the text in English
+- Registering on the login page doesn’t have any sort of toast confirmation 
+- Entering invalid login credentials does not alert the user that it is incorrect
 
-# Release Notes
+# Installation Guide 
+
 ## Pre-requisites
 To run our app, we require that have a working Python 3.5 environment alongside NodeJS running v9.2.0. 
 
