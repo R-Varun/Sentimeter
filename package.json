@@ -39,7 +39,7 @@
     "python-shell": "^0.4.0",
     "redis": "^2.8.0",
     "uniqid": "^4.1.1",
-    "validator": "^9.4.1"
+    "validator": "^13.7.0"
   },
   "devDependencies": {}
 }
